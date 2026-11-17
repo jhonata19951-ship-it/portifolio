@@ -58,8 +58,9 @@ nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:30;displ
 nav a{white-space:nowrap;color:var(--mut);text-decoration:none;font-size:14px;padding:10px 14px;border-radius:999px;transition:background .2s,color .2s}
 nav a:hover,nav a:focus-visible{background:#ffffff14;color:var(--txt);outline:none}
 nav a.nome{color:var(--txt);font-weight:700}
+nav a.ativo{color:#fff;font-weight:600;text-shadow:0 0 6px #ffffffcc,0 0 14px #8fa4ff,0 0 28px #9d6bff,0 0 46px #ff5c9a;background:#ffffff14;box-shadow:0 0 22px #7c8cff40}
 .prog{position:fixed;top:0;left:0;right:0;height:3px;background:var(--grad);transform-origin:0 50%;transform:scaleX(0);z-index:31}
-@media(max-width:760px){nav a:not(.nome):not(.vip){display:none}.nums{display:grid!important;grid-template-columns:1fr 1fr}.nums div{border-right:0!important}.nums div:nth-child(odd){border-right:1px solid #ffffff14!important}.nums div:nth-child(-n+2){border-bottom:1px solid #ffffff14}.dica{display:none!important}}
+@media(max-width:760px){nav{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;background:linear-gradient(90deg,#101a3fd9,#1a1238d9 55%,#2b0f2ed9);border:1px solid #ffffff1f;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}nav a.ativo{background:none;box-shadow:none}nav::-webkit-scrollbar{display:none}nav a{flex:none;font-size:13px;padding:9px 12px}.nums{display:grid!important;grid-template-columns:1fr 1fr}.nums div{border-right:0!important}.nums div:nth-child(odd){border-right:1px solid #ffffff14!important}.nums div:nth-child(-n+2){border-bottom:1px solid #ffffff14}.dica{display:none!important}}
 
 /* abertura */
 .hero{min-height:100svh;display:flex;align-items:center;padding:130px 0 60px}
@@ -157,7 +158,7 @@ footer p{color:var(--mut2)}
 <div class="luz a"></div><div class="luz b"></div><div class="grade"></div>
 <div class="prog"></div>
 
-<nav aria-label="Seções">
+<nav aria-label="Seções" data-lenis-prevent>
   <a class="nome" href="#topo">Jhonata Alves Sá</a>
   <a href="#tarjas">Tarjas</a>
   <a href="#eleicoes">Eleições</a>
@@ -522,6 +523,32 @@ footer p{color:var(--mut2)}
     window.addEventListener('load', () => ScrollTrigger.refresh());
   }
 }
+
+// Brilho na aba do menu conforme a seção visível (com clique ou rolagem)
+(function () {
+  const nav = document.querySelector('nav');
+  const links = [...nav.querySelectorAll('a:not(.nome)')];
+  const secoes = links.map((a) => document.querySelector(a.getAttribute('href')));
+  let atual = null, pedido = false;
+  function marcar() {
+    pedido = false;
+    const linha = window.innerHeight * 0.4;
+    let ativo = null;
+    secoes.forEach((sec, i) => { if (sec && sec.getBoundingClientRect().top <= linha) ativo = links[i]; });
+    if (ativo === atual) return;
+    if (atual) atual.classList.remove('ativo');
+    if (ativo) {
+      ativo.classList.add('ativo');
+      // no celular, desliza o menu para a aba ativa ficar visível
+      nav.scrollTo({ left: ativo.offsetLeft - (nav.clientWidth - ativo.offsetWidth) / 2, behavior: 'smooth' });
+    }
+    atual = ativo;
+  }
+  window.addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(marcar); } }, { passive: true });
+  window.addEventListener('resize', marcar);
+  window.addEventListener('load', marcar);
+  marcar();
+})();
 </script>
 </body>
 </html>
