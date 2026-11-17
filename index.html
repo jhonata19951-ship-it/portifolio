@@ -30,7 +30,8 @@ body{font-family:'Inter Tight',system-ui,sans-serif;background:var(--bg);color:v
 img,video{display:block;max-width:100%}
 .box{max-width:1240px;margin:0 auto;padding:0 max(4vw,20px)}
 .mono{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
-.g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.g{color:#b9a8ff}
+.g .lt{display:inline}
 .vidro{background:linear-gradient(160deg,#ffffff14,#ffffff05);border:1px solid var(--borda);border-radius:24px;box-shadow:inset 0 1px 0 #ffffff1c,0 30px 70px #0007}
 h1,h2{font-weight:800;letter-spacing:-.03em;line-height:1;text-wrap:balance}
 h2{font-size:clamp(36px,5.2vw,72px);margin:16px 0 18px}
@@ -331,8 +332,36 @@ footer p{color:var(--mut2)}
   }, { threshold: 0.15 });
   vids.forEach((v) => vo.observe(v));
 
+  // Pinta o degradê letra por letra (o modo escuro forçado de alguns celulares não altera essas cores)
+  const stops = [[122,162,255],[192,132,252],[255,107,139]];
+  const corEm = (t) => {
+    const seg = t < 0.5 ? 0 : 1, f = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
+    const a = stops[seg], b = stops[seg + 1];
+    return 'rgb(' + a.map((v, i) => Math.round(v + (b[i] - v) * f)).join(',') + ')';
+  };
+  function pintar() {
+    document.querySelectorAll('.g').forEach((el) => {
+      if (el.parentElement.closest('.g') || el.dataset.pintado) return;
+      el.dataset.pintado = 1;
+      const nos = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      while (w.nextNode()) nos.push(w.currentNode);
+      const total = nos.reduce((n, t) => n + t.textContent.replace(/\s/g, '').length, 0) || 1;
+      let i = 0;
+      nos.forEach((t) => {
+        const frag = document.createDocumentFragment();
+        [...t.textContent].forEach((ch) => {
+          if (/\s/.test(ch)) { frag.append(ch); return; }
+          const s = document.createElement('span'); s.className = 'lt';
+          s.style.color = corEm(total > 1 ? i / (total - 1) : 0); s.textContent = ch; frag.append(s); i++;
+        });
+        t.replaceWith(frag);
+      });
+    });
+  }
+
   // Sem a biblioteca (sem internet), a página continua completa, só sem animação
   if (window.gsap && window.ScrollTrigger) iniciar();
+  pintar();
 
   function iniciar() {
     gsap.registerPlugin(ScrollTrigger);
@@ -376,7 +405,6 @@ footer p{color:var(--mut2)}
       };
       [...el.childNodes].forEach(montar);
       // palavras em degradê: cada palavra recebe o degradê
-      el.querySelectorAll('.g .wi').forEach((wi) => wi.classList.add('g'));
       return el.querySelectorAll('.wi');
     }
 
