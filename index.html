@@ -6,6 +6,15 @@
 <meta name="theme-color" content="#05070d">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Portfólio de Jhonata Alves Sá: sistemas de apuração e grafismo para TV.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jhonata Alves Sá | Apuração e grafismo para TV">
+<meta property="og:description" content="Cinco sistemas de apuração e grafismo criados para a operação da emissora.">
+<meta property="og:image" content="https://jhonata19951-ship-it.github.io/portifolio/midia/capa.jpg">
+<meta property="og:url" content="https://jhonata19951-ship-it.github.io/portifolio/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%237aa2ff'/%3E%3Cstop offset='.5' stop-color='%23c084fc'/%3E%3Cstop offset='1' stop-color='%23ff6b8b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%2305070d'/%3E%3Cpath d='M9 22V10h3v12zm6-12h3l5 12h-3z' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <title>Jhonata Alves Sá | Apuração e grafismo para TV</title>
 <style>
 :root{color-scheme:dark}
@@ -39,7 +48,7 @@ h2{font-size:clamp(36px,5.2vw,72px);margin:16px 0 18px}
 section{position:relative}
 
 /* luzes de fundo */
-.luz{position:fixed;border-radius:50%;pointer-events:none;z-index:-1;filter:blur(10px)}
+.luz{position:fixed;border-radius:50%;pointer-events:none;z-index:-1;will-change:transform}
 .luz.a{width:70vw;height:70vw;right:-25vw;top:-35vw;background:radial-gradient(circle,#2848ff45,transparent 65%)}
 .luz.b{width:60vw;height:60vw;left:-25vw;bottom:-30vw;background:radial-gradient(circle,#ff2d5530,transparent 65%)}
 .grade{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:80px 80px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 15%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 40%,#000 15%,transparent 70%)}
@@ -122,7 +131,7 @@ li:before{content:"";position:absolute;left:2px;top:9px;width:9px;height:9px;bor
 .ba.cine .estado.agora{opacity:0;visibility:hidden}
 .ba.cine .shots{display:block;position:relative;height:min(62vh,calc((58vw - 40px) * .6));aspect-ratio:auto}
 .ba.cine .shot img,.ba.cine .shot .fv{height:calc(100% - 46px);object-fit:cover}
-.ba.cine .shot{height:100%;background:#0b0f1a}
+.ba.cine .shot{height:100%;background:#0b0f1a;will-change:transform,opacity}
 .ba.cine .shot .fv video{height:100%;width:100%;object-fit:contain}
 .ba.cine .shot{position:absolute;left:0;right:0;top:0}
 .ba.cine .corte{position:absolute;top:-4%;bottom:-4%;width:2px;left:100%;background:linear-gradient(transparent,#c7d2ff,transparent);box-shadow:0 0 30px 6px #8ea2ff88;opacity:0;pointer-events:none}
@@ -365,6 +374,7 @@ footer p{color:var(--mut2)}
 
   function iniciar() {
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
     gsap.defaults({ ease: 'power3.out', duration: 1 });
 
     // Rolagem suave ligada ao relógio do GSAP
@@ -479,9 +489,9 @@ footer p{color:var(--mut2)}
           // entrada da cena antes de fixar
           gsap.from(q('.era > *, .s25'), { y: 50, opacity: 0, stagger: 0.08, duration: 1, ease: 'expo.out',
             scrollTrigger: { trigger: sec, start: 'top 70%' } });
-          tl.to(q('.s25'), { scale: 0.9, opacity: 0.35, filter: 'grayscale(1)', duration: 1 }, 0.5)
+          tl.to(q('.s25'), { scale: 0.9, opacity: 0.3, duration: 1 }, 0.5)
             .to(q('.s26'), { yPercent: 0, rotate: 0, autoAlpha: 1, duration: 1 }, 0.5)
-            .to(q('.s26'), { filter: 'grayscale(.6) brightness(.8)', duration: 0.6 }, 2.1)
+            .to(q('.s26'), { opacity: 0.55, duration: 0.6 }, 2.1)
             .to(q('.corte'), { opacity: 1, duration: 0.1 }, 2.1)
             .to(q('.novo'), { clipPath: 'inset(0 0 0 0% round 24px)', duration: 1.2 }, 2.2)
             .to(q('.corte'), { left: '0%', duration: 1.2 }, 2.2)
