@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#05070d">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Portfólio de Jhonata Alves Sá: sistemas de apuração e grafismo para TV.">
+<title>Jhonata Alves Sá | Apuração e grafismo para TV</title>
+<style>
+:root{color-scheme:dark}
+/*
+VOICE: produto de tecnologia para TV, confiante e preciso
+IDEA: a página é uma régua de corte de TV; o scroll é o operador que dá o TAKE
+PICTURE: as gravações reais dos sistemas; antes e agora trocam por uma cortina de luz
+COLOUR e TYPE: noite azul profundo, degradê azul, lilás e rosa como luz de estúdio; Inter Tight + JetBrains Mono
+LAYOUT: cenas fixadas no desktop, coluna única no celular
+*/
+@font-face{font-family:'Inter Tight';src:url(midia/fonts/inter-tight-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url(midia/fonts/inter-tight-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url(midia/fonts/inter-tight-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url(midia/fonts/inter-tight-latin-800-normal.woff2) format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url(midia/fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+
+:root{--bg:#05070d;--txt:#f1f5ff;--mut:#a7b0c8;--mut2:#8b95ad;--azul:#8ea2ff;--rosa:#ff7a95;
+  --grad:linear-gradient(90deg,#7aa2ff,#c084fc 50%,#ff6b8b);--borda:#ffffff1f}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}
+html{scroll-padding-top:80px}
+body{font-family:'Inter Tight',system-ui,sans-serif;background:var(--bg);color:var(--txt);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip;transition:background-color .1s}
+img,video{display:block;max-width:100%}
+.box{max-width:1240px;margin:0 auto;padding:0 max(4vw,20px)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
+.g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vidro{background:linear-gradient(160deg,#ffffff14,#ffffff05);border:1px solid var(--borda);border-radius:24px;box-shadow:inset 0 1px 0 #ffffff1c,0 30px 70px #0007}
+h1,h2{font-weight:800;letter-spacing:-.03em;line-height:1;text-wrap:balance}
+h2{font-size:clamp(36px,5.2vw,72px);margin:16px 0 18px}
+.lead{font-size:clamp(17px,1.6vw,21px);color:var(--mut);max-width:620px}
+section{position:relative}
+
+/* luzes de fundo */
+.luz{position:fixed;border-radius:50%;pointer-events:none;z-index:-1;filter:blur(10px)}
+.luz.a{width:70vw;height:70vw;right:-25vw;top:-35vw;background:radial-gradient(circle,#2848ff45,transparent 65%)}
+.luz.b{width:60vw;height:60vw;left:-25vw;bottom:-30vw;background:radial-gradient(circle,#ff2d5530,transparent 65%)}
+.grade{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:80px 80px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 15%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 40%,#000 15%,transparent 70%)}
+
+/* menu e barra de progresso */
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:30;display:flex;gap:4px;padding:6px;border-radius:999px;background:#0b0f1acc;border:1px solid var(--borda);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);max-width:calc(100vw - 24px);overflow-x:auto;scrollbar-width:none}
+nav a{white-space:nowrap;color:var(--mut);text-decoration:none;font-size:14px;padding:10px 14px;border-radius:999px;transition:background .2s,color .2s}
+nav a:hover,nav a:focus-visible{background:#ffffff14;color:var(--txt);outline:none}
+nav a.nome{color:var(--txt);font-weight:700}
+.prog{position:fixed;top:0;left:0;right:0;height:3px;background:var(--grad);transform-origin:0 50%;transform:scaleX(0);z-index:31}
+@media(max-width:760px){nav a:not(.nome):not(.vip){display:none}.nums{display:grid!important;grid-template-columns:1fr 1fr}.nums div{border-right:0!important}.nums div:nth-child(odd){border-right:1px solid #ffffff14!important}.nums div:nth-child(-n+2){border-bottom:1px solid #ffffff14}.dica{display:none!important}}
+
+/* abertura */
+.hero{min-height:100svh;display:flex;align-items:center;padding:130px 0 60px}
+.hero h1{font-size:clamp(48px,9vw,132px);margin:24px 0 28px}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.wi{display:inline-block}
+.nums{display:inline-flex;flex-wrap:wrap;margin-top:44px;overflow:hidden}
+.nums div{padding:20px 30px;border-right:1px solid #ffffff14}
+.nums div:last-child{border-right:0}
+.nums b{display:block;font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.nums span{font-size:14px;color:var(--mut2)}
+.dica{position:absolute;bottom:40px;right:max(4vw,20px);color:var(--mut);font-size:17px;letter-spacing:.02em;display:flex;flex-direction:column;align-items:center;gap:10px}
+@media(max-width:1100px){.dica{display:none}}
+.dica i{width:1px;height:40px;background:linear-gradient(#8ea2ff,transparent)}
+
+/* vídeo de apresentação */
+.reel{padding:40px 0 120px}
+.reel .tela{padding:12px;transform-origin:50% 0}
+.reel video{width:100%;border-radius:14px;background:#000}
+.rod{display:flex;justify-content:space-between;gap:12px;padding:12px 6px 2px;color:var(--mut2);font-size:14px}
+
+/* cenas de projeto */
+.cena{padding:110px 0}
+.duo{display:grid;grid-template-columns:5fr 7fr;gap:48px;align-items:center}
+.duo.inv{grid-template-columns:7fr 5fr}
+.duo.inv>.txt{order:2}
+.palco{padding:12px}
+.palco .fv{background:#070a12;border-radius:14px;overflow:hidden;position:relative}
+.palco video.tr{mix-blend-mode:screen}
+ul{list-style:none;margin-top:22px}
+li{position:relative;padding-left:24px;margin:10px 0;font-size:17px}
+li:before{content:"";position:absolute;left:2px;top:9px;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#7aa2ff,#c084fc)}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#fff;padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:2px;background:linear-gradient(90deg,#4f6bff,#b04dff)}
+.tag.m{background:linear-gradient(90deg,#0e9f9e,#22c55e)}
+.selo{display:inline-flex;gap:10px;align-items:center;margin-top:8px;padding:8px 14px;border-radius:999px;background:#ffffff0d;border:1px solid var(--borda);font-size:15px;color:var(--mut)}
+.selo b{color:var(--txt)}
+.contador{font-size:clamp(56px,7vw,96px);font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+@media(max-width:900px){.duo,.duo.inv{grid-template-columns:1fr}.duo.inv>.txt{order:0}}
+
+/* faixa com os 7 programas */
+.faixa{overflow:hidden;padding:26px 0;border-block:1px solid #ffffff12;margin-top:56px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.faixa .in{display:flex;width:max-content}
+.faixa span{font-size:clamp(34px,5vw,64px);font-weight:800;letter-spacing:-.02em;padding:0 34px;white-space:nowrap;color:#ffffff22;-webkit-text-stroke:1px #ffffff55}
+.faixa span:nth-child(odd){color:var(--txt);-webkit-text-stroke:0}
+
+/* antes e agora: base empilhada (celular e sem animação) */
+.ba{padding:110px 0}
+.ba .estado{margin-bottom:28px}
+.ba .estado.agora{margin-top:56px}
+.era-tag{color:var(--rosa)}
+.shots{display:grid;gap:18px}
+.shot{padding:10px;margin:0}
+.shot img,.shot video{width:100%;height:auto;border-radius:12px}
+.ba .pin{display:flex;flex-direction:column;gap:18px}
+.ba .txts,.ba .shots{display:contents}
+.ba .era{order:1}.ba .s25{order:2}.ba .s26{order:3}.ba .agora{order:4}.ba .novo{order:5}.ba .corte{display:none}
+.shot figcaption{display:flex;justify-content:space-between;gap:12px;padding:12px 6px 2px;font-size:15px}
+.shot figcaption span{color:var(--mut2);text-align:right}
+.shot .fv{background:#070a12;border-radius:12px;overflow:hidden}
+.shot video.tr{mix-blend-mode:screen}
+.barra{display:none}
+
+/* antes e agora: versão de cinema (desktop com animação) */
+.ba.cine{padding:0}
+.ba.cine .pin{height:100vh;display:grid;grid-template-columns:4fr 7fr;gap:48px;align-items:center;max-width:1320px;margin:0 auto;padding:90px max(4vw,20px) 40px}
+.ba.cine .txts{display:block;position:relative;height:430px}
+.ba.cine .corte{display:block}
+.ba.cine .estado{position:absolute;inset:0;margin:0;display:flex;flex-direction:column;justify-content:center}
+.ba.cine .estado.agora{opacity:0;visibility:hidden}
+.ba.cine .shots{display:block;position:relative;height:min(62vh,calc((58vw - 40px) * .6));aspect-ratio:auto}
+.ba.cine .shot img,.ba.cine .shot .fv{height:calc(100% - 46px);object-fit:cover}
+.ba.cine .shot{height:100%;background:#0b0f1a}
+.ba.cine .shot .fv video{height:100%;width:100%;object-fit:contain}
+.ba.cine .shot{position:absolute;left:0;right:0;top:0}
+.ba.cine .corte{position:absolute;top:-4%;bottom:-4%;width:2px;left:100%;background:linear-gradient(transparent,#c7d2ff,transparent);box-shadow:0 0 30px 6px #8ea2ff88;opacity:0;pointer-events:none}
+.ba.cine .barra{display:flex;gap:10px;align-items:center;grid-column:1/-1;align-self:end;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--mut2)}
+.ba.cine .barra .trilho{flex:1;height:2px;background:#ffffff18;border-radius:2px;overflow:hidden}
+.ba.cine .barra .trilho i{display:block;height:100%;background:var(--grad);transform-origin:0 50%;transform:scaleX(0)}
+
+/* ganhos */
+.ganhos{padding:140px 0 120px}
+.ganhos .grade4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:48px}
+.ganhos .grade4 div{padding:28px}
+.ganhos .card b{display:block;font-size:22px;margin-bottom:8px}
+.ganhos .card span{color:var(--mut);font-size:16px}
+@media(max-width:1000px){.ganhos .grade4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.ganhos .grade4{grid-template-columns:1fr}}
+footer{padding:50px 0 80px;border-top:1px solid #ffffff12}
+footer b{font-size:22px}
+footer p{color:var(--mut2)}
+:focus-visible{outline:2px solid #8ea2ff;outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="luz a"></div><div class="luz b"></div><div class="grade"></div>
+<div class="prog"></div>
+
+<nav aria-label="Seções">
+  <a class="nome" href="#topo">Jhonata Alves Sá</a>
+  <a href="#tarjas">Tarjas</a>
+  <a href="#eleicoes">Eleições</a>
+  <a href="#programacao">Programação</a>
+  <a class="vip" href="#carnaval">Carnaval</a>
+  <a class="vip" href="#parintins">Parintins</a>
+  <a href="#ganhos">Ganhos</a>
+</nav>
+
+<!-- CENA 1: abertura -->
+<header class="hero" id="topo"><div class="box">
+  <div class="mono an-in">Portfólio 2026</div>
+  <h1 class="split">Apuração e grafismo <span class="g">feitos para a TV.</span></h1>
+  <p class="lead an-in">Cinco sistemas criados para a operação da emissora. Do dado oficial à arte no ar, com identidade própria, preview antes de publicar e espaço para patrocinadores.</p>
+  <div class="nums vidro an-in">
+    <div><b data-n="5">5</b><span>sistemas</span></div>
+    <div><b data-n="7">7</b><span>programas numa central</span></div>
+    <div><b>TSE</b><span>dados automáticos</span></div>
+    <div><b data-n="100" data-s="%">100%</b><span>marca da emissora</span></div>
+  </div>
+</div>
+<div class="dica an-in" aria-hidden="true">role para assistir<i></i></div>
+</header>
+
+<!-- CENA 2: vídeo de apresentação -->
+<section class="reel" aria-label="Vídeo de apresentação"><div class="box">
+  <div class="tela vidro">
+    <video src="midia/portfolio-video.mp4" poster="midia/capa.jpg" controls muted playsinline preload="metadata"></video>
+    <div class="rod"><span>Vídeo de apresentação com todos os projetos</span><span>5 min 35 s</span></div>
+  </div>
+</div></section>
+
+<!-- CENA 3: tarjas -->
+<section class="cena" id="tarjas" data-bg="#05070d"><div class="box duo">
+  <div class="txt">
+    <div class="mono">Projeto 01 de 05</div>
+    <h2 class="split">Tarjas Eleitorais</h2>
+    <p class="lead">Inovação de 2026. Antes não existia tarja de apuração em tempo real na programação; agora o resultado entra sobre o que está no ar, sem interromper.</p>
+    <ul class="lista">
+      <li>Dados oficiais do TSE, sem digitação <span class="tag">NOVO</span></li>
+      <li>Fotos, nomes e percentuais dos candidatos</li>
+      <li>Crawl de notícias A Crítica via RSS <span class="tag">NOVO</span></li>
+      <li>Preview e TAKE: nada vai ao ar sem conferência</li>
+    </ul>
+  </div>
+  <div class="palco vidro revela">
+    <div class="fv"><video class="tr" src="midia/projeto1.mp4" poster="midia/projeto1.jpg" muted loop playsinline preload="none" aria-label="Gravação real das tarjas eleitorais"></video></div>
+    <div class="rod"><span>Gravação real do sistema</span><span>Saída transparente</span></div>
+  </div>
+</div></section>
+
+<!-- CENA 4: eleições -->
+<section class="cena" id="eleicoes" data-bg="#040a1a"><div class="box duo inv">
+  <div class="txt">
+    <div class="mono">Projeto 02 de 05</div>
+    <h2 class="split">Apuração Eleições Gerais</h2>
+    <p class="lead">Resultado completo, do Brasil a qualquer cidade, com mapa colorido por quem lidera.</p>
+    <div class="contador" data-n="5569" aria-label="5.569 municípios">5.569</div>
+    <div class="selo"><b>municípios</b> navegáveis num clique</div>
+    <ul class="lista">
+      <li>Mapa colorido por município <span class="tag">NOVO</span></li>
+      <li>Brancos, nulos, comparecimento e abstenção</li>
+      <li>Presidente e governador em tempo real</li>
+    </ul>
+  </div>
+  <div class="palco vidro circulo">
+    <div class="fv"><video src="midia/projeto2.mp4" poster="midia/projeto2.jpg" muted loop playsinline preload="none" aria-label="Gravação real da apuração das eleições"></video></div>
+    <div class="rod"><span>Gravação real do sistema</span><span>Dados do TSE</span></div>
+  </div>
+</div></section>
+
+<!-- CENA 5: programação diária -->
+<section class="cena" id="programacao" data-bg="#0a0610"><div class="box duo">
+  <div class="txt">
+    <div class="mono">Projeto 03 de 05</div>
+    <h2 class="split">Programação Diária</h2>
+    <p class="lead">Antes, cada programa tinha seu projeto e o texto era digitado no título do vMix. Agora, uma central só cuida de todos.</p>
+    <ul class="lista">
+      <li>Animações originais mais suaves, a 30 fps <span class="tag m">MELHOROU</span></li>
+      <li>Manchetes e créditos colados do Excel <span class="tag">NOVO</span></li>
+      <li>Relógio, clima, crawl RSS, QR code e merchan</li>
+    </ul>
+  </div>
+  <div class="palco vidro revela">
+    <div class="fv"><video class="tr" src="midia/projeto3.mp4" poster="midia/projeto3.jpg" muted loop playsinline preload="none" aria-label="Gravação real da central de programação"></video></div>
+    <div class="rod"><span>Gravação real do sistema</span><span>Saída transparente</span></div>
+  </div>
+</div>
+<div class="faixa" aria-label="Programas atendidos: Manhã, Aquecimento, Alô, Magazine, 17h, Alerta e ACBR"><div class="in" aria-hidden="true">
+  <span>Manhã</span><span>Aquecimento</span><span>Alô</span><span>Magazine</span><span>17h</span><span>Alerta</span><span>ACBR</span>
+  <span>Manhã</span><span>Aquecimento</span><span>Alô</span><span>Magazine</span><span>17h</span><span>Alerta</span><span>ACBR</span>
+</div></div>
+</section>
+
+<!-- CENA 6: carnaval, como era e como está agora -->
+<section class="ba" id="carnaval" data-bg="#0c0616"><div class="pin box">
+  <div class="txts">
+    <div class="estado era">
+      <div class="mono era-tag">Carnaval de Manaus: como era</div>
+      <h2>A emissora exibia a arte de terceiros.</h2>
+      <p class="lead">Em 2025 foi uma planilha na tela. Em 2026, a arte pronta do governo. Sem a marca da TV e sem espaço para patrocínio.</p>
+    </div>
+    <div class="estado agora">
+      <div class="mono">Projeto 04 de 05: como está agora</div>
+      <h2>Carnaval <span class="g">2027</span></h2>
+      <ul>
+        <li>Arte própria com a identidade do Carnaval <span class="tag">NOVO</span></li>
+        <li>Descarte e penalidades automáticos <span class="tag m">MELHOROU</span></li>
+        <li>Classificação vertical animada <span class="tag">NOVO</span></li>
+        <li>Faixa de patrocínio: receita nova <span class="tag">NOVO</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="shots">
+    <figure class="shot vidro s25"><img src="midia/antes-carnaval-2025.jpg" alt="Carnaval 2025: planilha exibida na tela" loading="lazy" decoding="async" width="1280" height="720"><figcaption><b>2025</b><span>Planilha exibida na tela</span></figcaption></figure>
+    <figure class="shot vidro s26"><img src="midia/antes-carnaval-2026.jpg" alt="Carnaval 2026: arte pronta do governo" loading="lazy" decoding="async" width="1280" height="720"><figcaption><b>2026</b><span>Arte pronta do governo</span></figcaption></figure>
+    <figure class="shot vidro novo"><div class="fv"><video class="tr" src="midia/projeto4.mp4" poster="midia/projeto4.jpg" muted loop playsinline preload="none" aria-label="Gravação real do sistema do Carnaval 2027"></video></div><figcaption><b>2027</b><span>Sistema próprio, gravação real</span></figcaption></figure>
+    <div class="corte"></div>
+  </div>
+  <div class="barra"><span>Como era</span><span class="trilho"><i></i></span><span>Como está agora</span></div>
+</div></section>
+
+<!-- CENA 7: parintins, como era e como está agora -->
+<section class="ba" id="parintins" data-bg="#050b18"><div class="pin box">
+  <div class="txts">
+    <div class="estado era">
+      <div class="mono era-tag">Festival de Parintins: como era</div>
+      <h2>A tabela vinha pronta de fora.</h2>
+      <p class="lead">Em 2025, a planilha do Excel no ar, com as abas aparecendo. Em 2026, a arte do governo. A emissora não controlava o ritmo da revelação.</p>
+    </div>
+    <div class="estado agora">
+      <div class="mono">Projeto 05 de 05: como está agora</div>
+      <h2>Parintins <span class="g">2027</span></h2>
+      <ul>
+        <li>Revelação de nota por boi, em tempo real <span class="tag">NOVO</span></li>
+        <li>Blocos A, B e C com descarte e subtotais <span class="tag m">MELHOROU</span></li>
+        <li>Resultado da noite animado <span class="tag">NOVO</span></li>
+        <li>Vinheta de patrocinadores <span class="tag">NOVO</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="shots">
+    <figure class="shot vidro s25"><img src="midia/antes-parintins-2025.jpg" alt="Parintins 2025: planilha do Excel no ar" loading="lazy" decoding="async" width="1280" height="720"><figcaption><b>2025</b><span>Planilha do Excel no ar</span></figcaption></figure>
+    <figure class="shot vidro s26"><img src="midia/antes-parintins-2026.jpg" alt="Parintins 2026: arte pronta do governo" loading="lazy" decoding="async" width="1280" height="720"><figcaption><b>2026</b><span>Arte pronta do governo</span></figcaption></figure>
+    <figure class="shot vidro novo"><div class="fv"><video class="tr" src="midia/projeto5.mp4" poster="midia/projeto5.jpg" muted loop playsinline preload="none" aria-label="Gravação real do sistema de Parintins 2027"></video></div><figcaption><b>2027</b><span>Sistema próprio, gravação real</span></figcaption></figure>
+    <div class="corte"></div>
+  </div>
+  <div class="barra"><span>Como era</span><span class="trilho"><i></i></span><span>Como está agora</span></div>
+</div></section>
+
+<!-- CENA 8: ganhos -->
+<section class="ganhos" id="ganhos" data-bg="#05070d"><div class="box">
+  <div class="mono">O que a emissora ganha</div>
+  <h2 class="split">De repassar a arte dos outros <span class="g">para ter a sua.</span></h2>
+  <div class="grade4">
+    <div class="vidro card"><b>Identidade própria</b><span>Todas as artes com a marca e o padrão da emissora.</span></div>
+    <div class="vidro card"><b>Receita nova</b><span>Faixas e vinhetas de patrocínio dentro da apuração.</span></div>
+    <div class="vidro card"><b>Menos erro ao vivo</b><span>Dados automáticos e preview antes de ir ao ar.</span></div>
+    <div class="vidro card"><b>Operação rápida</b><span>Tudo pelo navegador do vMix.</span></div>
+  </div>
+</div></section>
+
+<footer><div class="box">
+  <b>Jhonata Alves Sá</b>
+  <p>Dev. de Soluções em IA</p>
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+{
+  // Vídeos só tocam quando estão na tela (economiza bateria no celular)
+  const vids = document.querySelectorAll('video[loop]');
+  const vo = new IntersectionObserver((itens) => {
+    itens.forEach((it) => {
+      const v = it.target;
+      if (it.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; v.play().catch(() => {}); }
+      else v.pause();
+    });
+  }, { threshold: 0.15 });
+  vids.forEach((v) => vo.observe(v));
+
+  // Sem a biblioteca (sem internet), a página continua completa, só sem animação
+  if (window.gsap && window.ScrollTrigger) iniciar();
+
+  function iniciar() {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.defaults({ ease: 'power3.out', duration: 1 });
+
+    // Rolagem suave ligada ao relógio do GSAP
+    let lenis = null;
+    if (window.Lenis && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    // Menu leva até a seção
+    document.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', (e) => {
+      const alvo = document.querySelector(a.getAttribute('href'));
+      if (!alvo) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(alvo, { offset: alvo.id === 'topo' ? 0 : -10 });
+      else alvo.scrollIntoView({ behavior: 'smooth' });
+    }));
+
+    // Divide títulos em palavras para a entrada por máscara
+    function palavras(el) {
+      if (el.dataset.ok) return el.querySelectorAll('.wi');
+      el.dataset.ok = 1;
+      el.setAttribute('aria-label', el.textContent.trim().replace(/\s+/g, ' '));
+      const montar = (no) => {
+        if (no.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          no.textContent.split(/(\s+)/).forEach((p) => {
+            if (!p) return;
+            if (/^\s+$/.test(p)) { frag.append(' '); return; }
+            const w = document.createElement('span'); w.className = 'w'; w.setAttribute('aria-hidden', 'true');
+            const wi = document.createElement('span'); wi.className = 'wi'; wi.textContent = p;
+            w.append(wi); frag.append(w);
+          });
+          no.replaceWith(frag);
+        } else [...no.childNodes].forEach(montar);
+      };
+      [...el.childNodes].forEach(montar);
+      // palavras em degradê: cada palavra recebe o degradê
+      el.querySelectorAll('.g .wi').forEach((wi) => wi.classList.add('g'));
+      return el.querySelectorAll('.wi');
+    }
+
+    const mm = gsap.matchMedia();
+    mm.add({ motion: '(prefers-reduced-motion: no-preference)', wide: '(min-width: 901px)' }, (ctx) => {
+      const { motion, wide } = ctx.conditions;
+      if (!motion) return;
+
+      // barra de progresso da página
+      gsap.to('.prog', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
+
+      // luzes de fundo se movem em velocidades diferentes
+      gsap.to('.luz.a', { yPercent: 40, xPercent: -10, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 1 } });
+      gsap.to('.luz.b', { yPercent: -60, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 1.5 } });
+
+      // cor de fundo muda por capítulo
+      document.querySelectorAll('[data-bg]').forEach((s) => ScrollTrigger.create({
+        trigger: s, start: 'top 55%', end: 'bottom 45%',
+        onToggle: (self) => self.isActive && gsap.to(document.body, { backgroundColor: s.dataset.bg, duration: 0.9, ease: 'power2.inOut', overwrite: 'auto' })
+      }));
+
+      // CENA 1: entrada orquestrada
+      const t0 = gsap.timeline({ delay: 0.15 });
+      t0.from(palavras(document.querySelector('.hero h1')), { yPercent: 115, duration: 1.1, stagger: 0.06, ease: 'expo.out' })
+        .from('.hero .an-in', { y: 24, opacity: 0, stagger: 0.12, duration: 0.9 }, 0.35);
+      document.querySelectorAll('.nums b[data-n]').forEach((b) => {
+        const o = { v: 0 }, fim = +b.dataset.n, suf = b.dataset.s || '';
+        t0.to(o, { v: fim, duration: 1.4, ease: 'power2.out', onUpdate: () => b.textContent = Math.round(o.v) + suf }, 0.7);
+      });
+      gsap.to('.hero .box', { yPercent: -18, opacity: 0.25, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+      // CENA 2: a tela do vídeo cresce como uma TV ligando
+      gsap.fromTo('.reel .tela', { scale: 0.74, borderRadius: 40, opacity: 0.4 }, { scale: 1, borderRadius: 24, opacity: 1, ease: 'none',
+        scrollTrigger: { trigger: '.reel', start: 'top 95%', end: 'top 20%', scrub: 1 } });
+
+      // Títulos de cena entram por máscara
+      document.querySelectorAll('.cena h2.split, .ganhos h2.split').forEach((h) => gsap.from(palavras(h), {
+        yPercent: 115, stagger: 0.05, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: h, start: 'top 82%' } }));
+      document.querySelectorAll('.cena .lista').forEach((l) => gsap.from(l.children, {
+        x: -24, opacity: 0, stagger: 0.08, duration: 0.8, scrollTrigger: { trigger: l, start: 'top 85%' } }));
+
+      // CENA 3 e 5: vídeo revelado de baixo para cima, como uma tarja entrando
+      document.querySelectorAll('.revela').forEach((p) => {
+        gsap.fromTo(p, { clipPath: 'inset(100% 0 0 0 round 24px)' }, { clipPath: 'inset(0% 0 0 0 round 24px)', ease: 'none',
+          scrollTrigger: { trigger: p, start: 'top 88%', end: 'top 40%', scrub: 1 } });
+        gsap.fromTo(p.querySelector('video'), { scale: 1.25 }, { scale: 1, ease: 'none',
+          scrollTrigger: { trigger: p, start: 'top 88%', end: 'top 30%', scrub: 1 } });
+      });
+
+      // CENA 4: mapa revelado em círculo e contador de municípios
+      gsap.fromTo('.circulo', { clipPath: 'circle(8% at 30% 50%)' }, { clipPath: 'circle(80% at 50% 50%)', ease: 'none',
+        scrollTrigger: { trigger: '.circulo', start: 'top 85%', end: 'top 30%', scrub: 1 } });
+      const cont = document.querySelector('.contador'), oc = { v: 0 };
+      gsap.to(oc, { v: 5569, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: cont, start: 'top 85%' },
+        onUpdate: () => cont.textContent = Math.round(oc.v).toLocaleString('pt-BR') });
+
+      // CENA 5: faixa de programas acelera com a rolagem
+      const fx = gsap.to('.faixa .in', { xPercent: -50, repeat: -1, duration: 28, ease: 'none' });
+      ScrollTrigger.create({ trigger: '.faixa', start: 'top bottom', end: 'bottom top', onUpdate: (self) => {
+        gsap.to(fx, { timeScale: self.direction * (1 + Math.abs(self.getVelocity()) / 350), duration: 0.4, overwrite: true });
+      } });
+
+      // CENAS 6 e 7: como era e como está agora (cena assinatura)
+      document.querySelectorAll('.ba').forEach((sec) => {
+        if (wide) {
+          sec.classList.add('cine');
+          const q = gsap.utils.selector(sec);
+          const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
+            trigger: sec, start: 'top top', end: '+=320%', scrub: 1, pin: q('.pin')[0], anticipatePin: 1, invalidateOnRefresh: true } });
+          gsap.set(q('.s26'), { yPercent: 118, rotate: 3, autoAlpha: 0 });
+          gsap.set(q('.novo'), { clipPath: 'inset(0 0 0 100% round 24px)' });
+          // entrada da cena antes de fixar
+          gsap.from(q('.era > *, .s25'), { y: 50, opacity: 0, stagger: 0.08, duration: 1, ease: 'expo.out',
+            scrollTrigger: { trigger: sec, start: 'top 70%' } });
+          tl.to(q('.s25'), { scale: 0.9, opacity: 0.35, filter: 'grayscale(1)', duration: 1 }, 0.5)
+            .to(q('.s26'), { yPercent: 0, rotate: 0, autoAlpha: 1, duration: 1 }, 0.5)
+            .to(q('.s26'), { filter: 'grayscale(.6) brightness(.8)', duration: 0.6 }, 2.1)
+            .to(q('.corte'), { opacity: 1, duration: 0.1 }, 2.1)
+            .to(q('.novo'), { clipPath: 'inset(0 0 0 0% round 24px)', duration: 1.2 }, 2.2)
+            .to(q('.corte'), { left: '0%', duration: 1.2 }, 2.2)
+            .to(q('.corte'), { opacity: 0, duration: 0.15 }, 3.35)
+            .to(q('.era'), { y: -50, opacity: 0, duration: 0.5 }, 2.2)
+            .fromTo(q('.agora'), { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6 }, 2.6)
+            .from(q('.agora li'), { x: -20, opacity: 0, stagger: 0.1, duration: 0.4 }, 2.9)
+            .to(q('.trilho i'), { scaleX: 1, duration: 3.8 }, 0)
+            .to({}, { duration: 0.6 });
+          return () => sec.classList.remove('cine');
+        }
+        // celular: antes e agora em sequência, com revelação simples
+        const q = gsap.utils.selector(sec);
+        q('.shot').forEach((s) => gsap.from(s, { y: 50, opacity: 0, duration: 0.9, scrollTrigger: { trigger: s, start: 'top 88%' } }));
+        gsap.fromTo(q('.novo'), { clipPath: 'inset(0 100% 0 0 round 24px)' }, { clipPath: 'inset(0 0% 0 0 round 24px)', ease: 'none',
+          scrollTrigger: { trigger: q('.novo')[0], start: 'top 85%', end: 'top 35%', scrub: 1 } });
+      });
+
+      // CENA 8: cartões de ganhos entram em leque
+      gsap.from('.ganhos .card', { y: 70, rotate: (i) => (i - 1.5) * 3, opacity: 0, stagger: 0.1, duration: 1, ease: 'expo.out',
+        scrollTrigger: { trigger: '.ganhos .grade4', start: 'top 85%' } });
+
+      return () => document.querySelectorAll('.ba').forEach((s) => s.classList.remove('cine'));
+    });
+
+    // recalcula posições depois que fontes e imagens carregam
+    document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+  }
+}
+</script>
+</body>
+</html>
