@@ -814,3 +814,11 @@ body[data-topo="azul"]:not(.noturno) .meds a.pin{border-image:linear-gradient(90
 body[data-topo="azul"]:not(.noturno) .head .menu a.pin{border-image:linear-gradient(90deg,#4f7cff 50%,#ff4d5e 50%) 1}
 body[data-topo="azul"]:not(.noturno) .head .ajustes-bt,body[data-topo="azul"]:not(.noturno) .head .clima,body[data-topo="azul"]:not(.noturno) .head .clima b{color:#fff}
 body[data-topo="azul"]:not(.noturno) .head .ajustes-bt{color:#fff;background:#ffffff1a;border-color:#ffffff40}
+
+/* Fotos sem corte: sempre na proporção 16:9 das fotos do portal (as artes têm texto nas bordas) */
+.card .foto,.dest .foto,.boi .foto,.tv .foto,.video .tv .foto,.mat figure .foto{height:auto;aspect-ratio:16/9}
+@media (max-width:900px){
+  .card{grid-template-columns:136px 1fr;align-items:start}
+  .card .foto{height:auto;aspect-ratio:16/9;grid-row:span 2;margin:0}
+  .boi .foto{height:auto;aspect-ratio:16/9}
+}
