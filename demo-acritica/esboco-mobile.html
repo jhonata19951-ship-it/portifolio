@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="only light">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Protótipo: esboço mobile | A Crítica</title>
+<link rel="icon" type="image/png" href="assets/favicon.png?v=3">
+<meta name="theme-color" content="#ffffff">
+<style>
+/* VOICE: portal de notícias, direto e rápido de ler no polegar
+   IDEA: feed vertical de jornal no celular, uma notícia por vez, com a régua colorida da marca
+   PICTURE: foto grande do destaque, de ponta a ponta, logo abaixo do cabeçalho
+   COLOUR and TYPE: branco, tinta #0d2340, cor de cada editoria nos chapéus; DM Sans
+   LAYOUT: cabeçalho fixo, feed em coluna, barra de navegação embaixo ao alcance do dedo */
+@font-face{font-family:DM;src:url(assets/fonts/dm-sans-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:DM;src:url(assets/fonts/dm-sans-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:DM;src:url(assets/fonts/dm-sans-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:DM;src:url(assets/fonts/dm-sans-latin-800-normal.woff2) format('woff2');font-weight:800;font-display:swap}
+:root{color-scheme:only light;--tinta:#0d2340;--texto:#3a4b61;--cinza:#6b7c90;--linha:#e6ebf1;--suave:#f4f7fa;--azul:#0b5aa3;--azul-claro:#00a7e2;--garantido:#c8102e;--caprichoso:#1a3fb8;--vivo:#e4252f;--barra:64px}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:120px}
+body{margin:0;background:#dfe5ec;color:var(--tinta);font:16px/1.5 DM,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.app{max-width:520px;margin:0 auto;background:#fff;min-height:100vh;padding-bottom:calc(var(--barra) + env(safe-area-inset-bottom) + 8px);box-shadow:0 0 40px #0d234014}
+.aviso{background:#0b1f3a;color:#cfe0ff;font:500 11.5px/1.3 DM;text-align:center;padding:5px 12px}
+
+/* Cabeçalho */
+.topo{position:sticky;top:0;z-index:40;background:#fff;transition:box-shadow .25s}
+.topo.rolou{box-shadow:0 6px 18px #0d23401a}
+.barra-topo{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;height:56px;padding:0 6px}
+.ic{width:44px;height:44px;border:0;background:none;display:grid;place-items:center;border-radius:12px;color:var(--tinta);cursor:pointer}
+.ic:active{background:var(--suave)}
+.ic svg{width:24px;height:24px}
+.marca{justify-self:center}
+.marca img{height:27px;width:auto}
+.regua{height:4px;background:linear-gradient(90deg,#5b2bb5 0 5%,#0094d6 6.5% 14%,#d6232f 15.5% 20%,#0f8a5f 21.5% 26.5%,#e8731a 28% 32%,#c2185b 33.5% 39%,var(--garantido) 40.5% 44%,var(--caprichoso) 45.5% 49%,#5b2bb5 50.5% 55%,#0094d6 56.5% 64%,#d6232f 65.5% 70%,#0f8a5f 71.5% 76.5%,#e8731a 78% 82%,#c2185b 83.5% 89%,var(--garantido) 90.5% 94%,var(--caprichoso) 95.5% 100%);background-size:200% 100%;animation:anda 40s linear infinite}
+@keyframes anda{to{background-position:100% 0}}
+.eds{display:flex;gap:20px;overflow-x:auto;padding:11px 16px 10px;scrollbar-width:none;border-bottom:1px solid var(--linha)}
+.eds::-webkit-scrollbar,.alta::-webkit-scrollbar{display:none}
+.eds a{flex:none;font:700 15px/1.2 DM;padding:4px 0;border-bottom:2px solid transparent}
+.eds a.on{border-color:currentColor}
+.pin{background:linear-gradient(90deg,var(--garantido) 50%,var(--caprichoso) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Em alta */
+.alta{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none;align-items:center}
+.alta b{flex:none;font:800 12px DM;color:var(--vivo);letter-spacing:.06em;margin-right:2px}
+.alta a{flex:none;font:500 14px DM;padding:7px 13px;border-radius:99px;background:var(--suave);border:1px solid var(--linha)}
+
+/* Destaque */
+.destaque{display:block;padding-bottom:6px}
+.foto{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#0b5aa3,#0d2340);overflow:hidden}
+.foto img{width:100%;height:100%;object-fit:cover}
+.foto .cred{position:absolute;right:8px;bottom:6px;font:500 10px DM;color:#fff;opacity:.85;text-shadow:0 1px 3px #000}
+.destaque .corpo{padding:14px 16px 4px}
+.chapeu{font:800 13px/1 DM;letter-spacing:.02em;margin-bottom:8px;display:block}
+.destaque h1{font:800 27px/1.12 DM;letter-spacing:-.4px;margin:0 0 10px;text-wrap:balance}
+.fina{color:var(--texto);font-size:16px;margin:0 0 12px}
+.rel{list-style:none;margin:0;padding:0;border-left:3px solid var(--cor,var(--azul));padding-left:12px;display:grid;gap:8px}
+.rel li{font:700 15px/1.3 DM}
+
+/* Feed */
+.sec{display:flex;align-items:center;gap:10px;font:800 19px DM;margin:26px 16px 4px}
+.sec::after{content:"";flex:1;height:1px;background:var(--linha)}
+.item{display:block;padding:18px 16px;border-bottom:1px solid var(--linha)}
+.item h2{font:800 21px/1.18 DM;margin:0 0 12px;text-wrap:balance}
+.item .foto{border-radius:12px;margin-bottom:10px}
+.item p{margin:0 0 8px;color:var(--texto);font-size:15.5px}
+.meta{font:500 13px DM;color:var(--cinza)}
+.mini{display:grid;grid-template-columns:1fr 108px;gap:14px;padding:14px 16px;border-bottom:1px solid var(--linha);align-items:start}
+.mini h3{font:700 16.5px/1.25 DM;margin:0 0 6px}
+.mini .foto{aspect-ratio:1;border-radius:10px}
+
+/* Publicidade */
+.ad{margin:18px auto;width:300px;height:250px;border:1px dashed #c9d3de;border-radius:10px;display:grid;place-content:center;text-align:center;color:var(--cinza);font:500 13px DM;background:repeating-linear-gradient(135deg,#f6f8fb 0 14px,#fff 14px 28px)}
+.ad b{display:block;font:800 16px DM;color:var(--tinta)}
+
+/* Parintins 50/50 */
+.parin{margin:26px 0 0;background:linear-gradient(90deg,var(--garantido) 0 50%,var(--caprichoso) 50% 100%);color:#fff;padding:18px 0 20px}
+.parin h2{margin:0 16px 14px;font:800 24px DM;display:flex;justify-content:space-between;align-items:baseline}
+.parin h2 small{font:700 12px DM;opacity:.85;letter-spacing:.05em}
+.bois{display:grid;grid-template-columns:1fr 1fr}
+.boi{padding:0 12px}
+.boi>span{display:block;font:800 13px DM;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;opacity:.95}
+.boi a{display:block;margin-bottom:14px}
+.boi .foto{border-radius:10px;margin-bottom:8px;background:#ffffff22}
+.boi p{margin:0;font:700 14px/1.3 DM}
+
+/* Mais lidas */
+.lidas{list-style:none;margin:6px 0 0;padding:0 16px;counter-reset:n}
+.lidas li{counter-increment:n;display:grid;grid-template-columns:44px 1fr;gap:6px;padding:13px 0;border-bottom:1px solid var(--linha);align-items:start}
+.lidas li::before{content:counter(n);font:800 30px/1 DM;color:var(--cor,var(--azul))}
+.lidas a{font:700 16px/1.3 DM}
+.lidas small{display:block;margin-top:4px;font:700 12px DM;color:var(--cor)}
+
+/* Rodapé */
+.rodape{margin-top:30px;background:#0d2340;color:#c8d6e6;padding:26px 16px 30px;font-size:14px}
+.rodape img{height:24px;margin-bottom:12px}
+.rodape a{display:inline-block;margin:0 14px 10px 0;color:#fff;font-weight:700}
+
+/* Barra de baixo */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:520px;z-index:50;background:#ffffffef;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--linha);display:grid;grid-template-columns:repeat(5,1fr);height:calc(var(--barra) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+.nav a,.nav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:700 11px DM;color:var(--cinza);cursor:pointer}
+.nav svg{width:23px;height:23px}
+.nav .on{color:var(--azul)}
+.nav .vivo{color:var(--vivo)}
+.nav .vivo i{width:46px;height:46px;border-radius:50%;background:var(--vivo);display:grid;place-items:center;margin-top:-24px;box-shadow:0 6px 16px #e4252f55;border:3px solid #fff}
+.nav .vivo i::before{content:"";width:12px;height:12px;border-radius:50%;background:#fff;animation:pulsa 1.6s ease-in-out infinite}
+@keyframes pulsa{50%{transform:scale(.6);opacity:.6}}
+
+/* Menu lateral */
+.vela{position:fixed;inset:0;background:#0d234066;z-index:60;opacity:0;visibility:hidden;transition:.3s}
+.gaveta{position:fixed;top:0;bottom:0;left:0;width:min(84vw,360px);background:#fff;z-index:61;transform:translateX(-102%);transition:transform .35s cubic-bezier(.22,1,.36,1);padding:16px 0 24px;overflow-y:auto}
+body.menu .vela{opacity:1;visibility:visible}
+body.menu .gaveta{transform:none}
+.gaveta header{display:flex;justify-content:space-between;align-items:center;padding:0 10px 10px 18px;border-bottom:1px solid var(--linha)}
+.gaveta header img{height:24px}
+.gaveta a{display:flex;align-items:center;gap:12px;padding:14px 20px;font:700 17px DM;border-bottom:1px solid var(--suave)}
+.gaveta a::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cor)}
+
+.nota{margin:18px 16px 0;padding:12px 14px;border-radius:12px;background:var(--suave);font-size:13.5px;color:var(--texto)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="aviso" role="note">Protótipo de redesign: não é o site oficial. Esboço da versão mobile</div>
+  <header class="topo" id="topo">
+    <div class="barra-topo">
+      <button class="ic" id="abrir-menu" aria-label="Abrir editorias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+      <a class="marca" href="index.html" aria-label="A Crítica, página inicial"><img src="assets/logo-azul.png" alt="A Crítica" width="147" height="27"></a>
+      <a class="ic" href="index.html" aria-label="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg></a>
+    </div>
+    <div class="regua"></div>
+    <nav class="eds" id="eds" aria-label="Editorias"></nav>
+  </header>
+
+  <main>
+    <div class="alta" id="alta"><b>EM ALTA</b></div>
+    <div id="destaque"></div>
+    <div id="feed1"></div>
+    <div class="ad" aria-label="Espaço publicitário"><span>PUBLICIDADE<b>300 x 250</b>Anuncie no A Crítica</span></div>
+    <h2 class="sec">Mais de Manaus</h2>
+    <div id="mini"></div>
+    <section class="parin" aria-label="Parintins">
+      <h2><span>Parintins</span><small>FESTIVAL 2027</small></h2>
+      <div class="bois"><div class="boi" id="garantido"><span>Garantido</span></div><div class="boi" id="caprichoso"><span>Caprichoso</span></div></div>
+    </section>
+    <div id="feed2"></div>
+    <h2 class="sec">Mais lidas</h2>
+    <ol class="lidas" id="lidas"></ol>
+    <div class="ad" aria-label="Espaço publicitário"><span>PUBLICIDADE<b>300 x 250</b>Anuncie no A Crítica</span></div>
+    <p class="nota">Esboço com as notícias de 17/11. Toque em qualquer notícia para abrir a matéria no layout novo.</p>
+  </main>
+
+  <footer class="rodape">
+    <img src="assets/logo-branca.png" alt="A Crítica" width="130" height="24">
+    <div><a href="editoria.html?e=manaus">Manaus</a><a href="editoria.html?e=politica">Política</a><a href="editoria.html?e=policia">Polícia</a><a href="editoria.html?e=esportes">Esportes</a><a href="editoria.html?e=parintins">Parintins</a></div>
+    <div>Rede A Crítica, Manaus, Amazonas</div>
+  </footer>
+</div>
+
+<nav class="nav" aria-label="Navegação principal">
+  <a class="on" href="#topo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>Início</a>
+  <button id="nav-eds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>Editorias</button>
+  <a class="vivo" href="https://play.acritica.com/"><i></i>AO VIVO</a>
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>Buscar</a>
+  <a href="https://www.youtube.com/@portalacriticaam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor"/></svg>Vídeos</a>
+</nav>
+
+<div class="vela" id="vela"></div>
+<aside class="gaveta" id="gaveta" aria-label="Editorias">
+  <header><img src="assets/logo-azul.png" alt="A Crítica" width="130" height="24"><button class="ic" id="fechar-menu" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></header>
+  <div id="lista-eds"></div>
+</aside>
+
+<script src="assets/data.js"></script>
+<script>
+{
+  const $ = (s) => document.querySelector(s);
+  const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const segura = (u) => (/^https:\/\/www\.acritica\.com\//.test(u || '') ? u : '');
+  const M = {}; MATERIAS.forEach((m) => (M[m.id] = m));
+  const ed = (id) => EDITORIAS[id] || { nome: 'Notícias', cor: '#0b5aa3' };
+  const link = (m) => 'materia.html?id=' + encodeURIComponent(m.id);
+  const foto = (src, alt, cred) => `<div class="foto">${segura(src) ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.remove()">` : ''}${cred ? `<span class="cred">${esc(cred)}</span>` : ''}</div>`;
+  const chapeu = (m) => { const e = ed(m.ed); return `<span class="chapeu ${m.ed === 'parintins' ? 'pin' : ''}" style="color:${e.cor}">${esc(e.nome)}</span>`; };
+  const meta = (m) => `<div class="meta">${esc(m.data)}${m.hora ? ', ' + esc(m.hora) : ''} em ${esc(ed(m.ed).nome)}</div>`;
+
+  // Editorias no topo e no menu lateral
+  const ordem = ['policia', 'manaus', 'politica', 'economia', 'esportes', 'entretenimento', 'parintins', 'amazonia', 'saude', 'educacao', 'opiniao'];
+  $('#eds').innerHTML = ordem.map((k) => `<a class="${k === 'parintins' ? 'pin' : ''}" href="editoria.html?e=${k}" style="color:${ed(k).cor}">${esc(ed(k).nome)}</a>`).join('');
+  $('#lista-eds').innerHTML = ordem.map((k) => `<a href="editoria.html?e=${k}" style="--cor:${ed(k).cor}">${esc(ed(k).nome)}</a>`).join('');
+
+  // Em alta
+  $('#alta').insertAdjacentHTML('beforeend', EM_ALTA.slice(0, 8).map((a) => `<a href="${M[a.id] ? link(M[a.id]) : 'index.html'}">${esc(a.t)}</a>`).join(''));
+
+  // Destaque
+  const h = M[HOME.hero] || MATERIAS[0];
+  $('#destaque').innerHTML = `<a class="destaque" href="${link(h)}">${foto(h.img, h.alt, h.credito)}<div class="corpo">${chapeu(h)}<h1>${esc(h.titulo)}</h1><p class="fina">${esc(h.linha)}</p>
+    <ul class="rel" style="--cor:${ed(h.ed).cor}">${(h.topicos || []).slice(0, 3).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div></a>`;
+
+  // Feed principal
+  const usados = new Set([h.id]);
+  const card = (m) => { usados.add(m.id); return `<a class="item" href="${link(m)}">${chapeu(m)}<h2>${esc(m.titulo)}</h2>${foto(m.img, m.alt)}<p>${esc(m.linha)}</p>${meta(m)}</a>`; };
+  const mini = (m) => { usados.add(m.id); return `<a class="mini" href="${link(m)}"><div>${chapeu(m)}<h3>${esc(m.titulo)}</h3>${meta(m)}</div>${foto(m.img, m.alt)}</a>`; };
+  $('#feed1').innerHTML = [...HOME.cards, 'pc-am-procurado'].map((id) => M[id]).filter(Boolean).map(card).join('');
+  $('#mini').innerHTML = HOME.manaus.map((id) => M[id]).filter(Boolean).map(mini).join('');
+
+  // Parintins 50 a 50
+  const boi = (lista) => (lista || []).slice(0, 2).map((n) => `<a href="${esc(segura(n.url) || 'editoria.html?e=parintins')}">${foto(n.img, n.t)}<p>${esc(n.t)}</p></a>`).join('');
+  $('#garantido').insertAdjacentHTML('beforeend', boi(PARINTINS.garantido));
+  $('#caprichoso').insertAdjacentHTML('beforeend', boi(PARINTINS.caprichoso));
+
+  // Segunda parte do feed
+  const resto = MATERIAS.filter((m) => !usados.has(m.id) && !['parintins', 'opiniao'].includes(m.ed));
+  $('#feed2').innerHTML = resto.slice(0, 3).map(card).join('') + resto.slice(3, 7).map(mini).join('');
+
+  // Mais lidas
+  $('#lidas').innerHTML = resto.slice(7, 12).map((m) => `<li style="--cor:${ed(m.ed).cor}"><a href="${link(m)}">${esc(m.titulo)}<small>${esc(ed(m.ed).nome)}</small></a></li>`).join('');
+
+  // Menu lateral
+  const abre = () => document.body.classList.add('menu'), fecha = () => document.body.classList.remove('menu');
+  $('#abrir-menu').onclick = abre; $('#nav-eds').onclick = abre; $('#fechar-menu').onclick = fecha; $('#vela').onclick = fecha;
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && fecha());
+
+  // Sombra no cabeçalho ao rolar
+  const topo = $('#topo');
+  addEventListener('scroll', () => topo.classList.toggle('rolou', scrollY > 10), { passive: true });
+}
+</script>
+</body>
+</html>
