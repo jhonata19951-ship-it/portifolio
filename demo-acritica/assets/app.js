@@ -85,7 +85,7 @@ window.iniciarSite = function () {
     <nav class="mnav" aria-label="Navegação principal">
       <a class="${pagina === 'home' ? 'on' : ''}" href="index.html">${ic.inicio}Início</a>
       <button id="nav-eds">${ic.eds}Editorias</button>
-      <a class="mvivo" href="${TV.play}" target="_blank" rel="noopener"><i></i>AO VIVO</a>
+      <a class="mvivo" href="${TV.aovivo}" target="_blank" rel="noopener"><i></i>AO VIVO</a>
       <button id="nav-busca">${ic.busca}Buscar</button>
       <button class="noite-bt" id="noite-bt" aria-label="Trocar tema">${ic.sol}${ic.lua}<span class="t-claro">Escuro</span><span class="t-preto">Claro</span></button>
     </nav>
@@ -143,7 +143,7 @@ window.iniciarSite = function () {
       </div>
       <span class="clima"><b>Manaus</b> <span id="temp">--</span></span>
       <button class="lupa" id="abrir-busca" aria-label="Buscar">${icon.lupa}</button>
-      <a class="vivo" href="${TV.play}" target="_blank" rel="noopener"><i></i>AO VIVO</a>
+      <a class="vivo" href="${TV.aovivo}" target="_blank" rel="noopener"><i></i>AO VIVO</a>
     </div>
   </div></header>
   <div class="regua"></div>
@@ -355,7 +355,7 @@ window.iniciarSite = function () {
   const pub = `<div class="pub"><div class="wrap">${ad('970 x 90', 'Super banner', 'sb')}</div></div>`;
   const pubGrande = `<div class="pub"><div class="wrap">${ad('970 x 250', 'Billboard', 'bb')}</div></div>`;
   const oferecimento = (txt) => `<a class="ofer" href="https://www.acritica.com/comercial/" target="_blank" rel="noopener">${txt || 'Oferecimento'}<span>SUA MARCA AQUI</span></a>`;
-  const tvCard = `<a class="tv" href="${TV.play}" target="_blank" rel="noopener">
+  const tvCard = `<a class="tv" href="${TV.aovivo}" target="_blank" rel="noopener">
       <div class="foto"><img src="https://img.youtube.com/vi/${TV.video}/hqdefault.jpg" alt="Transmissão da TV A Crítica" onerror="this.remove()"><div class="play"><span>${icon.play}</span></div></div>
       <div class="t"><h4>● TV A CRÍTICA AO VIVO</h4><p>Assista agora à programação da TV A Crítica</p><span class="bt">Assistir</span></div></a>`;
   const opiniao1 = (o) => `<a class="op1" ${rota(o)}><small>OPINIÃO</small><p>${o.t}</p><div class="autor"><i style="background:${o.cor}">${o.ini}</i>${o.autor}</div></a>`;
@@ -398,7 +398,7 @@ window.iniciarSite = function () {
     <section class="magora"><h2><i></i>Agora</h2>${AGORA.slice(0, 5).map((a) => `<a ${rota(a)} style="--c:${ed(a.ed).cor}"><b>${a.h}</b><span><small>${ed(a.ed).nome}</small>${a.t}</span></a>`).join('')}</section>
     ${mad}
     ${manaus.length ? msec('manaus', 'Mais de Manaus') + manaus.map(fmini).join('') : ''}
-    <a class="mtv" href="${TV.play}" target="_blank" rel="noopener"><div class="foto"><img src="https://img.youtube.com/vi/${TV.video}/hqdefault.jpg" alt="Transmissão da TV A Crítica" loading="lazy" onerror="this.remove()"><span class="play">${icon.play}</span></div><div><b><i></i>TV A CRÍTICA AO VIVO</b><p>Assista agora à programação</p></div></a>
+    <a class="mtv" href="${TV.aovivo}" target="_blank" rel="noopener"><div class="foto"><img src="https://img.youtube.com/vi/${TV.video}/hqdefault.jpg" alt="Transmissão da TV A Crítica" loading="lazy" onerror="this.remove()"><span class="play">${icon.play}</span></div><div><b><i></i>TV A CRÍTICA AO VIVO</b><p>Assista agora à programação</p></div></a>
     ${politica.length || (LISTAS.politica || []).length ? msec('politica') + politica.map(fcard).join('') + `<div class="mlista">${(LISTAS.politica || []).map((i) => `<a ${rota(i)}>${i.t}</a>`).join('')}</div>` : ''}
     <section class="mparin" aria-label="Parintins">
       <h2><span>Parintins</span><small>FESTIVAL 2027</small></h2>

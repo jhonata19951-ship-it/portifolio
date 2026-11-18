@@ -526,4 +526,4 @@ var OPINIAO = [
 ];
 
 // TV A Crítica: vídeo indicado pelo próprio portal (og:video da página inicial)
-const TV = { video: 'jXAzzbXXKJw', play: 'https://play.acritica.com/', youtube: 'https://www.youtube.com/@portalacriticaam' };
+const TV = { video: 'jXAzzbXXKJw', aovivo: 'https://www.youtube.com/channel/UCnLSKfHkgZ6ujEYCO9jq7Sw/live', play: 'https://play.acritica.com/', youtube: 'https://www.youtube.com/@portalacriticaam' };
