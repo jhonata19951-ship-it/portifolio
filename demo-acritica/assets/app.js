@@ -346,11 +346,11 @@ window.iniciarSite = function () {
   const blocoParintins = `
   <section class="parin" aria-label="Parintins">
     <div class="faixa">
-      <div class="lado"><h2>GARANTIDO <span>Parintins 2027</span></h2><div class="boi">
-        ${PARINTINS.garantido.map((i) => `<a ${rota(i)}>${foto(i.img, i.t)}<h3>${i.t}</h3><small>${i.d}</small></a>`).join('')}
-      </div></div>
       <div class="lado"><h2>CAPRICHOSO <span>Parintins 2027</span></h2><div class="boi">
         ${PARINTINS.caprichoso.map((i) => `<a ${rota(i)}>${foto(i.img, i.t)}<h3>${i.t}</h3><small>${i.d}</small></a>`).join('')}
+      </div></div>
+      <div class="lado"><h2>GARANTIDO <span>Parintins 2027</span></h2><div class="boi">
+        ${PARINTINS.garantido.map((i) => `<a ${rota(i)}>${foto(i.img, i.t)}<h3>${i.t}</h3><small>${i.d}</small></a>`).join('')}
       </div></div>
     </div>
     <div class="cidade"><div class="wrap">${oferecimento('Cobertura Parintins 2027 com patrocínio de')}<a class="ver-cob" href="${linkEd('parintins')}">Ver toda a cobertura do festival</a></div></div>
@@ -385,7 +385,7 @@ window.iniciarSite = function () {
     ${politica.length || (LISTAS.politica || []).length ? msec('politica') + politica.map(fcard).join('') + `<div class="mlista">${(LISTAS.politica || []).map((i) => `<a ${rota(i)}>${i.t}</a>`).join('')}</div>` : ''}
     <section class="mparin" aria-label="Parintins">
       <h2><span>Parintins</span><small>FESTIVAL 2027</small></h2>
-      <div class="mbois"><div class="mboi"><span>Garantido</span>${boiM(PARINTINS.garantido)}</div><div class="mboi"><span>Caprichoso</span>${boiM(PARINTINS.caprichoso)}</div></div>
+      <div class="mbois"><div class="mboi"><span>Caprichoso</span>${boiM(PARINTINS.caprichoso)}</div><div class="mboi"><span>Garantido</span>${boiM(PARINTINS.garantido)}</div></div>
       <a class="ver" href="${linkEd('parintins')}">Ver toda a cobertura do festival</a>
     </section>
     ${esportes.length ? msec('esportes') + esportes.map(fcard).join('') : ''}

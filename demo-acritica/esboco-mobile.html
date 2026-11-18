@@ -36,13 +36,13 @@ img{display:block;max-width:100%}
 .ic svg{width:24px;height:24px}
 .marca{justify-self:center}
 .marca img{height:27px;width:auto}
-.regua{height:4px;background:linear-gradient(90deg,#5b2bb5 0 5%,#0094d6 6.5% 14%,#d6232f 15.5% 20%,#0f8a5f 21.5% 26.5%,#e8731a 28% 32%,#c2185b 33.5% 39%,var(--garantido) 40.5% 44%,var(--caprichoso) 45.5% 49%,#5b2bb5 50.5% 55%,#0094d6 56.5% 64%,#d6232f 65.5% 70%,#0f8a5f 71.5% 76.5%,#e8731a 78% 82%,#c2185b 83.5% 89%,var(--garantido) 90.5% 94%,var(--caprichoso) 95.5% 100%);background-size:200% 100%;animation:anda 40s linear infinite}
+.regua{height:4px;background:linear-gradient(90deg,#5b2bb5 0 5%,#0094d6 6.5% 14%,#d6232f 15.5% 20%,#0f8a5f 21.5% 26.5%,#e8731a 28% 32%,#c2185b 33.5% 39%,var(--caprichoso) 40.5% 44%,var(--garantido) 45.5% 49%,#5b2bb5 50.5% 55%,#0094d6 56.5% 64%,#d6232f 65.5% 70%,#0f8a5f 71.5% 76.5%,#e8731a 78% 82%,#c2185b 83.5% 89%,var(--caprichoso) 90.5% 94%,var(--garantido) 95.5% 100%);background-size:200% 100%;animation:anda 40s linear infinite}
 @keyframes anda{to{background-position:100% 0}}
 .eds{display:flex;gap:20px;overflow-x:auto;padding:11px 16px 10px;scrollbar-width:none;border-bottom:1px solid var(--linha)}
 .eds::-webkit-scrollbar,.alta::-webkit-scrollbar{display:none}
 .eds a{flex:none;font:700 15px/1.2 DM;padding:4px 0;border-bottom:2px solid transparent}
 .eds a.on{border-color:currentColor}
-.pin{background:linear-gradient(90deg,var(--garantido) 50%,var(--caprichoso) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pin{background:linear-gradient(90deg,var(--caprichoso) 50%,var(--garantido) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* Em alta */
 .alta{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none;align-items:center}
@@ -78,7 +78,7 @@ img{display:block;max-width:100%}
 .ad b{display:block;font:800 16px DM;color:var(--tinta)}
 
 /* Parintins 50/50 */
-.parin{margin:26px 0 0;background:linear-gradient(90deg,var(--garantido) 0 50%,var(--caprichoso) 50% 100%);color:#fff;padding:18px 0 20px}
+.parin{margin:26px 0 0;background:linear-gradient(90deg,var(--caprichoso) 0 50%,var(--garantido) 50% 100%);color:#fff;padding:18px 0 20px}
 .parin h2{margin:0 16px 14px;font:800 24px DM;display:flex;justify-content:space-between;align-items:baseline}
 .parin h2 small{font:700 12px DM;opacity:.85;letter-spacing:.05em}
 .bois{display:grid;grid-template-columns:1fr 1fr}
@@ -146,7 +146,7 @@ body.menu .gaveta{transform:none}
     <div id="mini"></div>
     <section class="parin" aria-label="Parintins">
       <h2><span>Parintins</span><small>FESTIVAL 2027</small></h2>
-      <div class="bois"><div class="boi" id="garantido"><span>Garantido</span></div><div class="boi" id="caprichoso"><span>Caprichoso</span></div></div>
+      <div class="bois"><div class="boi" id="caprichoso"><span>Caprichoso</span></div><div class="boi" id="garantido"><span>Garantido</span></div></div>
     </section>
     <div id="feed2"></div>
     <h2 class="sec">Mais lidas</h2>
