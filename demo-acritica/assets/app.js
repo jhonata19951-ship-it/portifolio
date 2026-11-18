@@ -12,6 +12,11 @@ window.iniciarSite = function () {
   const linkEd = (k) => 'editoria.html?e=' + k;
   const pagina = document.body.dataset.page;
   const edAtual = new URLSearchParams(location.search).get('e');
+  // Celular (até 700px): layout em feed, barra de navegação embaixo e menu lateral
+  const CEL = matchMedia('(max-width: 700px)');
+  const celular = CEL.matches;
+  document.body.classList.toggle('cel', celular);
+  if (CEL.addEventListener) CEL.addEventListener('change', () => location.reload());
 
   // Foto com reserva: se a imagem do portal não carregar, fica o fundo azul
   // Imagens: carregam só quando chegam perto da tela; a manchete carrega primeiro
@@ -39,6 +44,76 @@ window.iniciarSite = function () {
 
   const alta = EM_ALTA.map((a) => `<a href="${a.id ? 'materia.html?id=' + a.id : linkEd(a.ed)}">${a.t}</a>`).join('');
 
+  const buscaHTML = `
+  <div class="busca" id="busca"><div class="wrap">
+    <div class="campo">${icon.lupa}<input type="search" id="campo-busca" placeholder="O que você procura no A Crítica?" autocomplete="off"><kbd>Enter</kbd></div>
+    <div class="sugestoes" id="recentes"></div>
+    <div class="sugestoes"><span>Mais buscados:</span>${MAIS_BUSCADOS.map((a, i) => `<a style="--i:${i}" href="materia.html?id=${a.id}">${a.t}</a>`).join('')}</div>
+  </div></div>
+  <div class="busca-fundo" id="busca-fundo"></div>`;
+
+  if (celular) {
+    const ic = {
+      menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>',
+      inicio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg>',
+      eds: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>',
+      busca: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>',
+      sol: '<svg class="ic-claro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+      lua: '<svg class="ic-preto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
+      fechar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+    };
+    $('#topo-site').innerHTML = `
+    <header class="mhead"><div class="mbar">
+      <button class="mic" id="abrir-menu" aria-label="Abrir editorias" aria-expanded="false">${ic.menu}</button>
+      <a class="logo mlogo" href="index.html"><img src="assets/logo-azul.png" alt="A Crítica, página inicial" width="147" height="27"></a>
+      <button class="mic lupa" id="abrir-busca" aria-label="Buscar">${icon.lupa}</button>
+    </div>
+    <div class="regua"></div>
+    <nav class="meds" aria-label="Editorias">${menu}</nav></header>
+    ${buscaHTML}
+    ${pagina === 'home' ? `<div class="malta"><b>EM ALTA</b>${alta}</div>` : ''}`;
+    // Barra de navegação embaixo e menu lateral
+    const nav = document.createElement('div');
+    nav.innerHTML = `
+    <nav class="mnav" aria-label="Navegação principal">
+      <a class="${pagina === 'home' ? 'on' : ''}" href="index.html">${ic.inicio}Início</a>
+      <button id="nav-eds">${ic.eds}Editorias</button>
+      <a class="mvivo" href="${TV.play}" target="_blank" rel="noopener"><i></i>AO VIVO</a>
+      <button id="nav-busca">${ic.busca}Buscar</button>
+      <button class="noite-bt" id="noite-bt" aria-label="Trocar tema">${ic.sol}${ic.lua}<span class="t-claro">Escuro</span><span class="t-preto">Claro</span></button>
+    </nav>
+    <div class="mvela" id="mvela"></div>
+    <aside class="mgaveta" id="mgaveta" aria-label="Menu">
+      <header><a class="logo" href="index.html"><img src="assets/logo-azul.png" alt="A Crítica" width="130" height="24"></a><span class="clima"><b>Manaus</b> <span id="temp">--</span></span><button class="mic" id="fechar-menu" aria-label="Fechar menu">${ic.fechar}</button></header>
+      <div class="mg-eds">${MENU.map((k) => `<a class="${k === 'parintins' ? 'pin' : ''}" href="${linkEd(k)}" style="--cor:${ed(k).cor}">${ed(k).nome}</a>`).join('')}</div>
+      <h6>Tema</h6>
+      <div class="mg-temas temas-menu" id="temas-menu">
+        <button data-tema="claro"><i class="amostra a-claro"></i><span>Branco<small>Claro</small></span></button>
+        <button data-tema="preto"><i class="amostra a-preto"></i><span>Preto<small>Noturno</small></span></button>
+      </div>
+      <h6>Visual do topo</h6>
+      <div class="mg-visual" id="ajustes-menu">
+        <label><span>Textura listrada</span><input type="checkbox" id="op-textura"><i></i></label>
+        <label><span>Barra colorida em movimento</span><input type="checkbox" id="op-movimento"><i></i></label>
+      </div>
+      <h6>A Crítica</h6>
+      <div class="mg-links">
+        <a href="${TV.play}" target="_blank" rel="noopener">A Crítica Play</a>
+        <a href="${TV.youtube}" target="_blank" rel="noopener">Podcast no YouTube</a>
+        <a href="https://assinante.acritica.com/" target="_blank" rel="noopener">Impresso</a>
+      </div>
+    </aside>`;
+    while (nav.firstChild) document.body.appendChild(nav.firstChild);
+    const abreMenu = (ab) => { document.body.classList.toggle('menu-aberto', ab); $('#abrir-menu').setAttribute('aria-expanded', ab); };
+    $('#abrir-menu').onclick = () => abreMenu(true);
+    $('#nav-eds').onclick = () => abreMenu(true);
+    $('#fechar-menu').onclick = () => abreMenu(false);
+    $('#mvela').onclick = () => abreMenu(false);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abreMenu(false); });
+    $('#nav-busca').onclick = () => { scrollTo({ top: 0, behavior: 'smooth' }); $('#abrir-busca').click(); };
+    const mh = $('.mhead');
+    addEventListener('scroll', () => mh.classList.toggle('rolou', scrollY > 8), { passive: true });
+  } else {
   $('#topo-site').innerHTML = `
   <header class="head"><div class="wrap">
     <a class="logo" href="index.html"><img src="assets/logo-azul.png" alt="A Crítica, página inicial" width="239" height="44"></a>
@@ -58,7 +133,6 @@ window.iniciarSite = function () {
         <div class="temas-menu" id="temas-menu" role="menu">
           <b>Tema</b>
           <button data-tema="claro"><i class="amostra a-claro"></i><span>Branco<small>Claro</small></span></button>
-          <button data-tema="azul"><i class="amostra a-azul"></i><span>Azul<small>Pôr do sol</small></span></button>
           <button data-tema="preto"><i class="amostra a-preto"></i><span>Preto<small>Noturno</small></span></button>
         </div>
       </div>
@@ -80,6 +154,7 @@ window.iniciarSite = function () {
       <a class="impresso" href="https://assinante.acritica.com/" target="_blank" rel="noopener" title="A Crítica Digital: edição impressa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2"/><path d="M7 9h7M7 12h7M7 15h4"/></svg>Impresso</a>
       <a class="acplay" href="${TV.play}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z" fill="#fff"/></svg>A Crítica Play</a>
     </span></div></div>`;
+  }
 
   // Busca: Enter leva para a busca do portal oficial
   function mostrarRecentes() {
@@ -125,8 +200,8 @@ window.iniciarSite = function () {
     try { localStorage.setItem('acr-visual', JSON.stringify(opcoes)); } catch (e) {}
   }
   aplicarVisual();
-  // Temas: claro (branco), azul (pôr do sol) e preto (noturno)
-  const ORDEM = ['claro', 'azul', 'preto'];
+  // Temas: claro (branco) e preto (noturno)
+  const ORDEM = ['claro', 'preto'];
   const temaBt = $('#noite-bt'), temaMenu = $('#temas-menu');
   function aplicarTema(tema) {
     document.body.classList.toggle('noturno', tema !== 'claro');
@@ -140,7 +215,8 @@ window.iniciarSite = function () {
     try { localStorage.setItem('acr-tema', tema); } catch (e) {}
   }
   let temaAtual = 'claro';
-  try { temaAtual = localStorage.getItem('acr-tema') || (localStorage.getItem('acr-noite') === '1' ? 'azul' : 'claro'); } catch (e) {}
+  try { temaAtual = localStorage.getItem('acr-tema') || (localStorage.getItem('acr-noite') === '1' ? 'preto' : 'claro'); } catch (e) {}
+  if (!ORDEM.includes(temaAtual)) temaAtual = 'preto'; // quem estava no azul vai para o preto
   aplicarTema(temaAtual);
   function trocarTema(novo) {
     const atual = document.body.dataset.tema;
@@ -167,21 +243,28 @@ window.iniciarSite = function () {
     aplicarTema(novo);
     setTimeout(() => { document.body.classList.remove('trocando-tema'); if (faixaCel) faixaCel.remove(); }, 2100);
   }
-  temaBt.onclick = (e) => { e.stopPropagation(); const ab = temaMenu.classList.toggle('aberto'); temaBt.setAttribute('aria-expanded', ab); };
+  temaBt.onclick = (e) => {
+    e.stopPropagation();
+    if (celular) { trocarTema(document.body.dataset.tema === 'claro' ? 'preto' : 'claro'); return; }
+    const ab = temaMenu.classList.toggle('aberto'); temaBt.setAttribute('aria-expanded', ab);
+  };
   temaMenu.onclick = (e) => {
     e.stopPropagation();
     const b = e.target.closest('button[data-tema]');
     if (!b) return;
     temaMenu.classList.remove('aberto'); temaBt.setAttribute('aria-expanded', false);
+    if (celular) document.body.classList.remove('menu-aberto');
     trocarTema(b.dataset.tema);
   };
   document.addEventListener('click', () => { temaMenu.classList.remove('aberto'); temaBt.setAttribute('aria-expanded', false); });
   $('#op-textura').onchange = (e) => { opcoes.textura = e.target.checked; aplicarVisual(); };
   $('#op-movimento').onchange = (e) => { opcoes.movimento = e.target.checked; aplicarVisual(); };
   const ajBt = $('#ajustes-bt'), ajMenu = $('#ajustes-menu');
-  ajBt.onclick = (e) => { e.stopPropagation(); const ab = ajMenu.classList.toggle('aberto'); ajBt.setAttribute('aria-expanded', ab); };
-  ajMenu.onclick = (e) => e.stopPropagation();
-  document.addEventListener('click', () => { ajMenu.classList.remove('aberto'); ajBt.setAttribute('aria-expanded', false); });
+  if (ajBt) {
+    ajBt.onclick = (e) => { e.stopPropagation(); const ab = ajMenu.classList.toggle('aberto'); ajBt.setAttribute('aria-expanded', ab); };
+    ajMenu.onclick = (e) => e.stopPropagation();
+    document.addEventListener('click', () => { ajMenu.classList.remove('aberto'); ajBt.setAttribute('aria-expanded', false); });
+  }
 
   // Clima de Manaus em tempo real (Open-Meteo, sem cadastro). Sem internet, mostra 31°C.
   fetch('https://api.open-meteo.com/v1/forecast?latitude=-3.119&longitude=-60.0217&current=temperature_2m')
@@ -270,8 +353,50 @@ window.iniciarSite = function () {
     <div class="cidade"><div class="wrap">${oferecimento('Cobertura Parintins 2027 com patrocínio de')}<a class="ver-cob" href="${linkEd('parintins')}">Ver toda a cobertura do festival</a></div></div>
   </section>`;
 
+  // ---------- Página inicial no celular: feed ----------
+  const chapeu = (m) => m.ed === 'parintins' ? `<span class="chapeu pin">${ed(m.ed).nome}</span>` : `<span class="chapeu" style="color:${ed(m.ed).cor}">${ed(m.ed).nome}</span>`;
+  const quandoM = (m) => `<span class="mmeta">${m.data || ''}${m.hora ? ', ' + m.hora : ''} em ${ed(m.ed).nome}</span>`;
+  const usados = new Set();
+  const fcard = (m) => { usados.add(m.id); return `<a class="fitem" href="${linkMat(m)}">${chapeu(m)}<h2>${m.titulo}</h2>${foto(m.img, m.alt)}${m.linha ? `<p>${m.linha}</p>` : ''}${quandoM(m)}</a>`; };
+  const fmini = (m) => { usados.add(m.id); return `<a class="fmini" href="${linkMat(m)}"><div>${chapeu(m)}<h3>${m.titulo}</h3>${quandoM(m)}</div>${foto(m.img, m.alt)}</a>`; };
+  const msec = (k, titulo) => `<div class="msec" style="--c:${ed(k).cor}"><h2>${titulo || ed(k).nome}</h2><a href="${linkEd(k)}">ver mais</a></div>`;
+  const mad = `<a class="mad" href="https://www.acritica.com/comercial/" target="_blank" rel="noopener"><small>PUBLICIDADE</small><b>300 x 250</b><em>Anuncie no A Crítica</em></a>`;
+  if (pagina === 'home' && celular) {
+    const h = mat(HOME.hero) || MATERIAS[0];
+    usados.add(h.id);
+    const pega = (ids) => (Array.isArray(ids) ? ids : [ids]).map(mat).filter((m) => m && !usados.has(m.id));
+    const cards = pega(HOME.cards);
+    const manaus = pega(HOME.manaus);
+    const politica = pega(HOME.politica || []);
+    const esportes = pega(HOME.esportes);
+    const entre = pega(HOME.entretenimento);
+    const boiM = (lista) => (lista || []).slice(0, 2).map((i) => `<a ${rota(i)}>${foto(i.img, i.t)}<p>${i.t}</p></a>`).join('');
+    const htmlFeed = `
+    <a class="mdest" href="${linkMat(h)}">${foto(h.img, h.alt, '', true)}<div class="corpo">${chapeu(h)}<h1>${h.titulo}</h1>${h.linha ? `<p class="fina">${h.linha}</p>` : ''}
+      ${h.topicos ? `<ul class="rel" style="--c:${ed(h.ed).cor}">${h.topicos.slice(0, 3).map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}</div></a>
+    ${cards.map(fcard).join('')}
+    <section class="magora"><h2><i></i>Agora</h2>${AGORA.slice(0, 5).map((a) => `<a ${rota(a)} style="--c:${ed(a.ed).cor}"><b>${a.h}</b><span><small>${ed(a.ed).nome}</small>${a.t}</span></a>`).join('')}</section>
+    ${mad}
+    ${manaus.length ? msec('manaus', 'Mais de Manaus') + manaus.map(fmini).join('') : ''}
+    <a class="mtv" href="${TV.play}" target="_blank" rel="noopener"><div class="foto"><img src="https://img.youtube.com/vi/${TV.video}/hqdefault.jpg" alt="Transmissão da TV A Crítica" loading="lazy" onerror="this.remove()"><span class="play">${icon.play}</span></div><div><b><i></i>TV A CRÍTICA AO VIVO</b><p>Assista agora à programação</p></div></a>
+    ${politica.length || (LISTAS.politica || []).length ? msec('politica') + politica.map(fcard).join('') + `<div class="mlista">${(LISTAS.politica || []).map((i) => `<a ${rota(i)}>${i.t}</a>`).join('')}</div>` : ''}
+    <section class="mparin" aria-label="Parintins">
+      <h2><span>Parintins</span><small>FESTIVAL 2027</small></h2>
+      <div class="mbois"><div class="mboi"><span>Garantido</span>${boiM(PARINTINS.garantido)}</div><div class="mboi"><span>Caprichoso</span>${boiM(PARINTINS.caprichoso)}</div></div>
+      <a class="ver" href="${linkEd('parintins')}">Ver toda a cobertura do festival</a>
+    </section>
+    ${esportes.length ? msec('esportes') + esportes.map(fcard).join('') : ''}
+    ${mad}
+    ${entre.length ? msec('entretenimento') + entre.map(fmini).join('') : ''}
+    <div class="msec" style="--c:#0d2340"><h2>Mais lidas</h2></div>
+    <ol class="mlidas">${MATERIAS.filter((m) => !usados.has(m.id) && !['parintins', 'opiniao'].includes(m.ed)).slice(0, 5).map((m) => `<li style="--c:${ed(m.ed).cor}"><a href="${linkMat(m)}">${m.titulo}<small>${ed(m.ed).nome}</small></a></li>`).join('')}</ol>
+    <div class="msec" style="--c:#0d2340"><h2>Opinião</h2></div>
+    <div class="mops">${OPINIAO.map((o) => `<a ${rota(o)}><p>${o.t}</p><span class="autor"><i style="background:${o.cor}">${o.ini}</i>${o.autor}</span></a>`).join('')}</div>`;
+    $('#conteudo').innerHTML = htmlFeed;
+  }
+
   // ---------- Página inicial ----------
-  if (pagina === 'home') {
+  if (pagina === 'home' && !celular) {
     const h = mat(HOME.hero) || MATERIAS[0];
     const sub = HOME.cards.map(mat).filter(Boolean);
     const aoVivo = window.AO_VIVO ? new Date(AO_VIVO.quando) : null;
