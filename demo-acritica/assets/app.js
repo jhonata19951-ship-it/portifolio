@@ -86,11 +86,7 @@ window.iniciarSite = function () {
     <aside class="mgaveta" id="mgaveta" aria-label="Menu">
       <header><a class="logo" href="index.html"><img src="assets/logo-azul.png" alt="A Crítica" width="130" height="24"></a><span class="clima"><b>Manaus</b> <span id="temp">--</span></span><button class="mic" id="fechar-menu" aria-label="Fechar menu">${ic.fechar}</button></header>
       <div class="mg-eds">${MENU.map((k) => `<a class="${k === 'parintins' ? 'pin' : ''}" href="${linkEd(k)}" style="--cor:${ed(k).cor}">${ed(k).nome}</a>`).join('')}</div>
-      <h6>Tema</h6>
-      <div class="mg-temas temas-menu" id="temas-menu">
-        <button data-tema="claro"><i class="amostra a-claro"></i><span>Branco<small>Claro</small></span></button>
-        <button data-tema="preto"><i class="amostra a-preto"></i><span>Preto<small>Noturno</small></span></button>
-      </div>
+      <div id="temas-menu" hidden></div>
       <h6>Visual do topo</h6>
       <div class="mg-visual" id="ajustes-menu">
         <label><span>Textura listrada</span><input type="checkbox" id="op-textura"><i></i></label>
