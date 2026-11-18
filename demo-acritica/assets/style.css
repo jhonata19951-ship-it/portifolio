@@ -782,3 +782,5 @@ body.cel .cookies{z-index:66}
 .mnav .noite-bt:hover{border-color:transparent}
 .mdest .fina,.fitem p{font-family:DM,system-ui,sans-serif}
 body.cel .ancora{bottom:calc(var(--barra) + env(safe-area-inset-bottom) + 24px)!important;left:8px;right:8px;border-radius:12px}
+/* Listras também na linha das editorias (o topo vira um bloco só) */
+.meds{background:transparent}
