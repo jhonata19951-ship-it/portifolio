@@ -802,3 +802,14 @@ body.noturno.preto[data-variante] .hero .txt{background:linear-gradient(transpar
 /* Botão de tema na barra de baixo sem fundo cinza */
 body.cel .mnav .noite-bt{background:none!important;border:0!important}
 body.cel.noturno.preto[data-variante] .mhead .lupa{background:none;border:0}
+
+/* ---------- Esboço: topo azul como o portal oficial (?topo=azul, só no tema Branco) ---------- */
+body[data-topo="azul"]:not(.noturno) .mhead,body[data-topo="azul"]:not(.noturno) .head{background:repeating-linear-gradient(-25deg,#ffffff1c 0 1px,transparent 1px 4px),#07559b;border-color:#07559b}
+body[data-topo="azul"]:not(.noturno).sem-textura .mhead,body[data-topo="azul"]:not(.noturno).sem-textura .head{background:#07559b}
+body[data-topo="azul"]:not(.noturno) .mhead .mic,body[data-topo="azul"]:not(.noturno) .mhead .lupa svg *{color:#fff;stroke:#fff}
+body[data-topo="azul"]:not(.noturno) .meds{border-color:#ffffff26}
+body[data-topo="azul"]:not(.noturno) .meds a,body[data-topo="azul"]:not(.noturno) .head .menu a{-webkit-text-fill-color:#fff;border-bottom:3px solid currentColor;padding-bottom:3px}
+body[data-topo="azul"]:not(.noturno) .meds a.pin,body[data-topo="azul"]:not(.noturno) .head .menu a.pin{background:none;border-image:linear-gradient(90deg,var(--caprichoso) 50%,var(--garantido) 50%) 1}
+body[data-topo="azul"]:not(.noturno) .meds a.pin{border-image:linear-gradient(90deg,#4f7cff 50%,#ff4d5e 50%) 1}
+body[data-topo="azul"]:not(.noturno) .head .menu a.pin{border-image:linear-gradient(90deg,#4f7cff 50%,#ff4d5e 50%) 1}
+body[data-topo="azul"]:not(.noturno) .head .ajustes-bt,body[data-topo="azul"]:not(.noturno) .head .clima,body[data-topo="azul"]:not(.noturno) .head .clima b{color:#fff}

@@ -19,7 +19,10 @@ window.iniciarSite = function () {
   if (CEL.addEventListener) CEL.addEventListener('change', () => location.reload());
   // Prévia de tons do tema Preto (esboço): ?preto=atual|grafite|chumbo|azulado
   const qs = new URLSearchParams(location.search);
-  const previa = qs.has('preto');
+  const previa = qs.has('preto') || qs.has('topo');
+  // Prévia do topo azul (esboço): ?topo=azul
+  const topoAzul = qs.get('topo') === 'azul';
+  if (topoAzul) document.body.dataset.topo = 'azul';
   // Tom oficial do Preto: Chumbo (a prévia ainda permite comparar os outros)
   const tom = previa ? qs.get('preto') : 'chumbo';
   if (['grafite', 'chumbo', 'azulado'].includes(tom)) document.body.dataset.variante = tom;
@@ -212,14 +215,14 @@ window.iniciarSite = function () {
     document.documentElement.style.colorScheme = tema === 'claro' ? 'only light' : 'only dark';
     temaMenu.querySelectorAll('button').forEach((b) => b.classList.toggle('ativo', b.dataset.tema === tema));
     document.querySelectorAll('.logo img').forEach((img) => {
-      if (img.src.includes('logo-azul') || img.dataset.claro) { img.dataset.claro = '1'; img.src = tema === 'claro' ? 'assets/logo-azul.png' : 'assets/logo-branca.png'; }
+      if (img.src.includes('logo-azul') || img.dataset.claro) { img.dataset.claro = '1'; img.src = tema === 'claro' && !(topoAzul && img.closest('.mhead, .head')) ? 'assets/logo-azul.png' : 'assets/logo-branca.png'; }
     });
     if (!previa) { try { localStorage.setItem('acr-tema', tema); } catch (e) {} }
   }
   let temaAtual = 'claro';
   try { temaAtual = localStorage.getItem('acr-tema') || (localStorage.getItem('acr-noite') === '1' ? 'preto' : 'claro'); } catch (e) {}
   if (!ORDEM.includes(temaAtual)) temaAtual = 'preto'; // quem estava no azul vai para o preto
-  if (previa) temaAtual = 'preto';
+  if (previa) temaAtual = qs.has('preto') ? 'preto' : 'claro';
   aplicarTema(temaAtual);
   function trocarTema(novo) {
     const atual = document.body.dataset.tema;
