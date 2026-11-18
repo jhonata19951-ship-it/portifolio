@@ -17,6 +17,10 @@ window.iniciarSite = function () {
   const celular = CEL.matches;
   document.body.classList.toggle('cel', celular);
   if (CEL.addEventListener) CEL.addEventListener('change', () => location.reload());
+  // Prévia de tons do tema Preto (esboço): ?preto=atual|grafite|chumbo|azulado
+  const qs = new URLSearchParams(location.search);
+  const previa = qs.has('preto');
+  if (['grafite', 'chumbo', 'azulado'].includes(qs.get('preto'))) document.body.dataset.variante = qs.get('preto');
 
   // Foto com reserva: se a imagem do portal não carregar, fica o fundo azul
   // Imagens: carregam só quando chegam perto da tela; a manchete carrega primeiro
@@ -208,11 +212,12 @@ window.iniciarSite = function () {
     document.querySelectorAll('.logo img').forEach((img) => {
       if (img.src.includes('logo-azul') || img.dataset.claro) { img.dataset.claro = '1'; img.src = tema === 'claro' ? 'assets/logo-azul.png' : 'assets/logo-branca.png'; }
     });
-    try { localStorage.setItem('acr-tema', tema); } catch (e) {}
+    if (!previa) { try { localStorage.setItem('acr-tema', tema); } catch (e) {} }
   }
   let temaAtual = 'claro';
   try { temaAtual = localStorage.getItem('acr-tema') || (localStorage.getItem('acr-noite') === '1' ? 'preto' : 'claro'); } catch (e) {}
   if (!ORDEM.includes(temaAtual)) temaAtual = 'preto'; // quem estava no azul vai para o preto
+  if (previa) temaAtual = 'preto';
   aplicarTema(temaAtual);
   function trocarTema(novo) {
     const atual = document.body.dataset.tema;

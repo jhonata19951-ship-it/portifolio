@@ -784,3 +784,21 @@ body.cel .cookies{z-index:66}
 body.cel .ancora{bottom:calc(var(--barra) + env(safe-area-inset-bottom) + 24px)!important;left:8px;right:8px;border-radius:12px}
 /* Listras também na linha das editorias (o topo vira um bloco só) */
 .meds{background:transparent}
+
+/* ---------- Tons do tema Preto (prévia: ?preto=grafite|chumbo|azulado) ---------- */
+body.noturno.preto[data-variante="grafite"]{--p-bg:#121212;--p-suave:#1a1a1a;--p-cartao:#232323;--p-linha:#2f2f2f;--p-nav:#161616ee}
+body.noturno.preto[data-variante="chumbo"]{--p-bg:#1c1c1e;--p-suave:#242426;--p-cartao:#2c2c2e;--p-linha:#3a3a3c;--p-nav:#202022ee}
+body.noturno.preto[data-variante="azulado"]{--p-bg:#141a22;--p-suave:#1a222c;--p-cartao:#222c38;--p-linha:#2e3a49;--p-nav:#171e27ee}
+body.noturno.preto[data-variante]{--tinta:#f2f4f7;--texto:#c9ced6;--cinza:#a3abb6;--linha:var(--p-linha);--fundo-suave:var(--p-suave);--m-bg:var(--p-bg);--m-suave:var(--p-cartao);--m-nav:var(--p-nav);background:var(--p-bg)}
+body.noturno.preto[data-variante] .head,body.noturno.preto[data-variante] .mhead{background:repeating-linear-gradient(-25deg,#ffffff0c 0 1px,transparent 1px 4px),var(--p-bg);border-color:var(--p-linha)}
+body.noturno.preto.sem-textura[data-variante] .head,body.noturno.preto.sem-textura[data-variante] .mhead{background:var(--p-bg)}
+body.noturno.preto[data-variante] .alta{background:repeating-linear-gradient(-25deg,#ffffff0a 0 1px,transparent 1px 4px),var(--p-suave);border-color:var(--p-linha)}
+body.noturno.preto[data-variante] .lupa,body.noturno.preto[data-variante] .noite-bt,body.noturno.preto[data-variante] .op a,body.noturno.preto[data-variante] .op1,body.noturno.preto[data-variante] .tv,body.noturno.preto[data-variante] .mtv,body.noturno.preto[data-variante] .temas-menu,body.noturno.preto[data-variante] .ajustes-menu,body.noturno.preto[data-variante] .cookies{background:var(--p-cartao);border-color:var(--p-linha)}
+body.noturno.preto[data-variante] .pub,body.noturno.preto[data-variante] .video,body.noturno.preto[data-variante] .rodape,body.noturno.preto[data-variante] .parin .cidade{background:var(--p-suave)}
+body.noturno.preto[data-variante] .ad,body.noturno.preto[data-variante] .mad{background:repeating-linear-gradient(135deg,var(--p-suave) 0 14px,var(--p-bg) 14px 28px);border-color:var(--p-linha)}
+body.noturno.preto[data-variante] .foto{background:linear-gradient(135deg,var(--p-cartao),var(--p-suave))}
+body.noturno.preto[data-variante] .ti::before{background:var(--p-bg)}
+body.noturno.preto[data-variante] .hero .txt{background:linear-gradient(transparent,color-mix(in srgb,var(--p-bg) 94%,transparent) 55%)}
+/* Botão de tema na barra de baixo sem fundo cinza */
+body.cel .mnav .noite-bt{background:none!important;border:0!important}
+body.cel.noturno.preto[data-variante] .mhead .lupa{background:none;border:0}
