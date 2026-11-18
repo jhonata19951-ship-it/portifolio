@@ -20,7 +20,9 @@ window.iniciarSite = function () {
   // Prévia de tons do tema Preto (esboço): ?preto=atual|grafite|chumbo|azulado
   const qs = new URLSearchParams(location.search);
   const previa = qs.has('preto');
-  if (['grafite', 'chumbo', 'azulado'].includes(qs.get('preto'))) document.body.dataset.variante = qs.get('preto');
+  // Tom oficial do Preto: Chumbo (a prévia ainda permite comparar os outros)
+  const tom = previa ? qs.get('preto') : 'chumbo';
+  if (['grafite', 'chumbo', 'azulado'].includes(tom)) document.body.dataset.variante = tom;
 
   // Foto com reserva: se a imagem do portal não carregar, fica o fundo azul
   // Imagens: carregam só quando chegam perto da tela; a manchete carrega primeiro
