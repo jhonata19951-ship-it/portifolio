@@ -813,3 +813,4 @@ body[data-topo="azul"]:not(.noturno) .meds a.pin,body[data-topo="azul"]:not(.not
 body[data-topo="azul"]:not(.noturno) .meds a.pin{border-image:linear-gradient(90deg,#4f7cff 50%,#ff4d5e 50%) 1}
 body[data-topo="azul"]:not(.noturno) .head .menu a.pin{border-image:linear-gradient(90deg,#4f7cff 50%,#ff4d5e 50%) 1}
 body[data-topo="azul"]:not(.noturno) .head .ajustes-bt,body[data-topo="azul"]:not(.noturno) .head .clima,body[data-topo="azul"]:not(.noturno) .head .clima b{color:#fff}
+body[data-topo="azul"]:not(.noturno) .head .ajustes-bt{color:#fff;background:#ffffff1a;border-color:#ffffff40}

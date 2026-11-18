@@ -21,8 +21,6 @@ window.iniciarSite = function () {
   const qs = new URLSearchParams(location.search);
   const previa = qs.has('preto') || qs.has('topo');
   // Prévia do topo azul (esboço): ?topo=azul
-  const topoAzul = qs.get('topo') === 'azul';
-  if (topoAzul) document.body.dataset.topo = 'azul';
   // Tom oficial do Preto: Chumbo (a prévia ainda permite comparar os outros)
   const tom = previa ? qs.get('preto') : 'chumbo';
   if (['grafite', 'chumbo', 'azulado'].includes(tom)) document.body.dataset.variante = tom;
@@ -100,6 +98,7 @@ window.iniciarSite = function () {
       <div class="mg-visual" id="ajustes-menu">
         <label><span>Textura listrada</span><input type="checkbox" id="op-textura"><i></i></label>
         <label><span>Barra colorida em movimento</span><input type="checkbox" id="op-movimento"><i></i></label>
+        <label><span>Topo azul</span><input type="checkbox" id="op-azul"><i></i></label>
       </div>
       <h6>A Crítica</h6>
       <div class="mg-links">
@@ -129,7 +128,8 @@ window.iniciarSite = function () {
         <b>Visual do topo</b>
         <label><span>Textura listrada</span><input type="checkbox" id="op-textura"><i></i></label>
         <label><span>Barra colorida em movimento</span><input type="checkbox" id="op-movimento"><i></i></label>
-        <small>Desligado: barra parada, arte original do projeto</small>
+        <label><span>Topo azul</span><input type="checkbox" id="op-azul"><i></i></label>
+        <small>Barra desligada: fica parada, como na arte original do projeto</small>
       </div>
     </div>
     <div class="direita">
@@ -195,14 +195,29 @@ window.iniciarSite = function () {
   };
 
   // Opções de visual (ficam salvas neste navegador)
-  const opcoes = { textura: true, movimento: true };
+  const opcoes = { textura: true, movimento: true, azul: true };
   try { Object.assign(opcoes, JSON.parse(localStorage.getItem('acr-visual') || '{}')); } catch (e) {}
+  if (qs.has('topo')) opcoes.azul = qs.get('topo') === 'azul'; // prévia do esboço
+  // Logo: branca sobre fundo escuro (tema Preto ou topo azul), azul sobre fundo claro
+  function trocarLogos() {
+    const tema = document.body.dataset.tema || 'claro';
+    document.querySelectorAll('.logo img').forEach((img) => {
+      if (img.src.includes('logo-azul') || img.dataset.claro) {
+        img.dataset.claro = '1';
+        const fundoAzul = opcoes.azul && img.closest('.mhead, .head');
+        img.src = tema === 'claro' && !fundoAzul ? 'assets/logo-azul.png' : 'assets/logo-branca.png';
+      }
+    });
+  }
   function aplicarVisual() {
     document.body.classList.toggle('sem-textura', !opcoes.textura);
     document.body.classList.toggle('barra-original', !opcoes.movimento);
+    if (opcoes.azul) document.body.dataset.topo = 'azul'; else delete document.body.dataset.topo;
     $('#op-textura').checked = opcoes.textura;
     $('#op-movimento').checked = opcoes.movimento;
-    try { localStorage.setItem('acr-visual', JSON.stringify(opcoes)); } catch (e) {}
+    $('#op-azul').checked = opcoes.azul;
+    trocarLogos();
+    if (!qs.has('topo')) { try { localStorage.setItem('acr-visual', JSON.stringify(opcoes)); } catch (e) {} }
   }
   aplicarVisual();
   // Temas: claro (branco) e preto (noturno)
@@ -214,9 +229,7 @@ window.iniciarSite = function () {
     document.body.dataset.tema = tema;
     document.documentElement.style.colorScheme = tema === 'claro' ? 'only light' : 'only dark';
     temaMenu.querySelectorAll('button').forEach((b) => b.classList.toggle('ativo', b.dataset.tema === tema));
-    document.querySelectorAll('.logo img').forEach((img) => {
-      if (img.src.includes('logo-azul') || img.dataset.claro) { img.dataset.claro = '1'; img.src = tema === 'claro' && !(topoAzul && img.closest('.mhead, .head')) ? 'assets/logo-azul.png' : 'assets/logo-branca.png'; }
-    });
+    trocarLogos();
     if (!previa) { try { localStorage.setItem('acr-tema', tema); } catch (e) {} }
   }
   let temaAtual = 'claro';
@@ -265,6 +278,7 @@ window.iniciarSite = function () {
   document.addEventListener('click', () => { temaMenu.classList.remove('aberto'); temaBt.setAttribute('aria-expanded', false); });
   $('#op-textura').onchange = (e) => { opcoes.textura = e.target.checked; aplicarVisual(); };
   $('#op-movimento').onchange = (e) => { opcoes.movimento = e.target.checked; aplicarVisual(); };
+  $('#op-azul').onchange = (e) => { opcoes.azul = e.target.checked; aplicarVisual(); };
   const ajBt = $('#ajustes-bt'), ajMenu = $('#ajustes-menu');
   if (ajBt) {
     ajBt.onclick = (e) => { e.stopPropagation(); const ab = ajMenu.classList.toggle('aberto'); ajBt.setAttribute('aria-expanded', ab); };
