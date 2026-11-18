@@ -618,3 +618,9 @@ body.noturno.preto.sem-textura .alta{background:#0a0a0a}
 /* Selo de protótipo (versão online) */
 .aviso-prototipo{background:#0b1f3a;color:#cfe0ff;font:500 11.5px/1.3 'DM Sans',system-ui,sans-serif;text-align:center;padding:5px 12px;letter-spacing:.01em}
 html.noturno .aviso-prototipo,[data-tema=noturno] .aviso-prototipo{background:#111;color:#bbb}
+
+/* Celular: faixa da troca de tema sem View Transition */
+.varredura-cel{view-transition-name:none;height:60vh;opacity:.9}
+/* O site tem temas próprios: avisa o navegador para não escurecer as páginas por conta própria */
+:root{color-scheme:only light}
+@media (prefers-color-scheme:dark){:root{--esquema-sistema:escuro}}

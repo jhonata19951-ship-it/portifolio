@@ -132,6 +132,7 @@ window.iniciarSite = function () {
     document.body.classList.toggle('noturno', tema !== 'claro');
     document.body.classList.toggle('preto', tema === 'preto');
     document.body.dataset.tema = tema;
+    document.documentElement.style.colorScheme = tema === 'claro' ? 'only light' : 'only dark';
     temaMenu.querySelectorAll('button').forEach((b) => b.classList.toggle('ativo', b.dataset.tema === tema));
     document.querySelectorAll('.logo img').forEach((img) => {
       if (img.src.includes('logo-azul') || img.dataset.claro) { img.dataset.claro = '1'; img.src = tema === 'claro' ? 'assets/logo-azul.png' : 'assets/logo-branca.png'; }
@@ -145,7 +146,7 @@ window.iniciarSite = function () {
     const atual = document.body.dataset.tema;
     if (novo === atual) return;
     const escurecendo = ORDEM.indexOf(novo) > ORDEM.indexOf(atual);
-    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches && !matchMedia('(pointer: coarse)').matches) {
       // mais escuro: desce (de cima para baixo); mais claro: sobe (de baixo para cima)
       const faixa = document.createElement('div');
       faixa.className = 'varredura ' + (escurecendo ? (novo === 'preto' ? 'para-escuro para-preto' : 'para-escuro') : 'para-claro');
@@ -154,9 +155,17 @@ window.iniciarSite = function () {
       t.finished.finally(() => { faixa.remove(); document.documentElement.classList.remove('vt-sobe'); });
       return;
     }
+    // Celular: sem View Transition (alguns navegadores achatam a tela na captura).
+    // A faixa em degradê passa por cima enquanto as cores mudam suavemente.
     document.body.classList.add('trocando-tema');
+    let faixaCel = null;
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      faixaCel = document.createElement('div');
+      faixaCel.className = 'varredura varredura-cel ' + (escurecendo ? (novo === 'preto' ? 'para-escuro para-preto' : 'para-escuro') : 'para-claro');
+      document.body.appendChild(faixaCel);
+    }
     aplicarTema(novo);
-    setTimeout(() => document.body.classList.remove('trocando-tema'), 2100);
+    setTimeout(() => { document.body.classList.remove('trocando-tema'); if (faixaCel) faixaCel.remove(); }, 2100);
   }
   temaBt.onclick = (e) => { e.stopPropagation(); const ab = temaMenu.classList.toggle('aberto'); temaBt.setAttribute('aria-expanded', ab); };
   temaMenu.onclick = (e) => {
