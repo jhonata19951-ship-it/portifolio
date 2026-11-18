@@ -822,3 +822,5 @@ body[data-topo="azul"]:not(.noturno) .head .ajustes-bt{color:#fff;background:#ff
   .card .foto{height:auto;aspect-ratio:16/9;grid-row:span 2;margin:0}
   .boi .foto{height:auto;aspect-ratio:16/9}
 }
+/* Celular: a busca fica só na barra de baixo (a lupa do topo some, o logo continua centralizado) */
+body.cel .mhead .lupa{visibility:hidden;pointer-events:none}
