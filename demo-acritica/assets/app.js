@@ -2,7 +2,7 @@
 window.iniciarSite = function () {
   const $ = (s) => document.querySelector(s);
   const ed = (k) => EDITORIAS[k] || EDITORIAS.geral;
-  const mat = (id) => MATERIAS.find((m) => m.id === id);
+  const mat = (id) => MATERIAS.find((m) => m.id === id) || (window.EXTRAS || []).find((m) => m.id === id);
   const linkMat = (m) => 'materia.html?id=' + m.id;
   // Toda notícia abre no novo layout: procura a matéria pelo id ou pelo endereço do portal
   const rota = (i) => {
@@ -523,7 +523,68 @@ window.iniciarSite = function () {
   }
 
   // ---------- Página de editoria ----------
-  if (pagina === 'editoria') {
+  // Esboço: editoria em lista, uma notícia por linha, como o g1 (?feed=novo)
+  if (pagina === 'editoria' && qs.get('feed') === 'novo') {
+    const k = EDITORIAS[edAtual] ? edAtual : 'manaus';
+    const e = ed(k);
+    document.title = 'Protótipo: ' + e.nome + ' | A Crítica';
+    const titulo = k === 'parintins' ? `<h1 class="pin">${e.nome}</h1>` : `<h1>${e.nome}</h1>`;
+    // "Há 2 horas", "Há 15 minutos" ou a data, quando for mais antiga
+    const quandoRel = (m) => {
+      const min = m.ts ? Math.round((Date.now() - m.ts) / 60000) : -1;
+      const t = min < 0 ? (m.data || '') : min < 60 ? `Há ${Math.max(min, 1)} minuto${min > 1 ? 's' : ''}` : min < 1440 ? `Há ${Math.round(min / 60)} hora${Math.round(min / 60) > 1 ? 's' : ''}` : (m.data || '');
+      return `<span class="quando">${t} <i>em</i> ${e.nome}</span>`;
+    };
+    const fpost = (m, grande) => `<article class="fpost${grande ? ' grande' : ''}"><a href="${linkMat(m)}">${foto(m.img, m.alt, '', grande)}<div class="txt"><h2>${m.titulo}</h2>${m.linha ? `<p>${m.linha}</p>` : ''}${quandoRel(m)}</div></a></article>`;
+    const pubFeed = celular ? mad : `<div class="fpub">${ad('728 x 90', 'Publicidade', 'sb')}</div>`;
+    // Monta os itens; a cada 5 notícias entra um anúncio
+    const itens = (lista, inicio) => lista.map((m, i) => {
+      const n = inicio + i;
+      const html = celular ? (n === 0 ? fcard(m) : fmini(m)) : fpost(m, n === 0);
+      return html + ((n + 1) % 5 === 0 ? pubFeed : '');
+    }).join('');
+    const vistos = new Set();
+    const novos = (lista) => lista.filter((m) => m && !vistos.has(m.id) && vistos.add(m.id));
+    let mostradas = novos(MATERIAS.filter((m) => m.ed === k));
+    const outras = MATERIAS.filter((m) => m.ed !== k && !['parintins', 'opiniao'].includes(m.ed)).slice(0, 5);
+    const lado = celular ? '' : `<aside class="ed-lado"><div class="ed-fixo">
+      <h3>Mais lidas no A Crítica</h3>
+      <ol>${outras.map((m) => `<li style="--c:${ed(m.ed).cor}"><a href="${linkMat(m)}"><small>${ed(m.ed).nome}</small>${m.titulo}</a></li>`).join('')}</ol>
+      ${ad('300 x 250', 'Retângulo médio', 'mr')}
+    </div></aside>`;
+    $('#conteudo').innerHTML = `
+    <div class="ed-topo" style="--c:${e.cor}"><div class="wrap">${titulo}<p>Notícias de ${e.nome} no A Crítica</p></div></div>
+    ${k === 'parintins' ? blocoParintins : ''}
+    <section class="ed-feed" style="--c:${e.cor}"><div class="wrap">
+      <div class="ed-col"><div id="ed-lista">${itens(mostradas, 0)}</div>
+        <button class="ed-mais" id="ed-mais" type="button">Veja mais notícias de ${e.nome}</button></div>
+      ${lado}
+    </div></section>`;
+    // Busca no portal as notícias só desta editoria (12 por vez)
+    let pag = 1;
+    const botao = $('#ed-mais');
+    const carregar = (primeira) => {
+      if (!window.buscarEditoria) { botao.remove(); return; }
+      botao.disabled = true; botao.classList.add('esperando');
+      buscarEditoria(k, pag).then((lista) => {
+        if (primeira) {
+          // troca a primeira lista pela do portal, mais completa e em ordem de horário
+          vistos.clear();
+          mostradas = novos(lista.concat(mostradas));
+          $('#ed-lista').innerHTML = itens(mostradas, 0);
+        } else {
+          const extra = novos(lista);
+          $('#ed-lista').insertAdjacentHTML('beforeend', itens(extra, mostradas.length));
+          mostradas = mostradas.concat(extra);
+        }
+        pag++;
+        botao.disabled = false; botao.classList.remove('esperando');
+        if (lista.length < 12) botao.remove();
+      }).catch(() => { botao.disabled = false; botao.classList.remove('esperando'); if (!mostradas.length) botao.remove(); });
+    };
+    botao.addEventListener('click', () => carregar(false));
+    carregar(true);
+  } else if (pagina === 'editoria') {
     const k = EDITORIAS[edAtual] ? edAtual : 'manaus';
     const e = ed(k);
     document.title = 'Protótipo: ' + e.nome + ' | A Crítica';

@@ -185,6 +185,24 @@
     });
   }
 
+  // Página de editoria: busca as notícias só daquela editoria, 12 por vez (página 1, 2, 3...)
+  const ID_ED = { manaus: 3, politica: 10, policia: 6, economia: 12, esportes: 5, entretenimento: 4, parintins: 13, amazonia: 11, educacao: 14, saude: 9, opiniao: 8 };
+  const CHAVE_EXTRAS = 'acr-extras-v1';
+  try { window.EXTRAS = JSON.parse(localStorage.getItem(CHAVE_EXTRAS) || '[]'); } catch (e) { window.EXTRAS = []; }
+  window.buscarEditoria = function (k, pag) {
+    if (!ID_ED[k]) return Promise.resolve([]);
+    return comTempo(API + 'posts?categories=' + ID_ED[k] + '&per_page=12&page=' + (pag || 1) + '&' + EMB, 9000).then((r) => {
+      const lista = r.map(converter).filter((m) => m.url).map((m) => Object.assign(m, { ed: k }));
+      // guarda neste navegador para a página da matéria achar a notícia depois
+      try {
+        const ids = new Set(lista.map((m) => m.id));
+        window.EXTRAS = lista.concat((window.EXTRAS || []).filter((m) => !ids.has(m.id))).slice(0, 150);
+        localStorage.setItem(CHAVE_EXTRAS, JSON.stringify(window.EXTRAS));
+      } catch (e) {}
+      return lista;
+    });
+  };
+
   // Texto da matéria (só os primeiros parágrafos, o resto fica no portal)
   window.buscarTexto = function (m) {
     const tipo = m.tipo || 'posts';

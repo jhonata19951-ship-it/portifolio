@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="only light">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo: páginas das editorias | A Crítica</title>
+<link rel="icon" type="image/png" href="assets/favicon.png?v=3">
+<style>
+@font-face{font-family:DM;src:url(assets/fonts/dm-sans-latin-500-normal.woff2) format('woff2');font-weight:500}
+@font-face{font-family:DM;src:url(assets/fonts/dm-sans-latin-800-normal.woff2) format('woff2');font-weight:800}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;background:#fff;color:#0d2340;font:500 14px/1.4 DM,system-ui,sans-serif}
+body{display:flex;flex-direction:column;height:100dvh}
+.aviso{background:#0b1f3a;color:#cfe0ff;font-size:11.5px;text-align:center;padding:5px 12px}
+.topo{padding:10px 12px 10px;background:#f4f7fa;border-bottom:1px solid #e3e8ef}
+.topo h1{margin:0 0 8px;font:800 16px DM}
+.opcoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:560px}
+.opcoes button{border:1.5px solid #d5dde7;background:#fff;color:#0d2340;border-radius:12px;padding:8px 4px 7px;font:800 13px DM;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.opcoes button small{font:500 10.5px DM;color:#6b7c90}
+.opcoes button.on{border-color:#00a7e2;box-shadow:0 0 0 2px #00a7e244}
+.eds{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.eds button{border:1.5px solid #d5dde7;background:#fff;border-radius:999px;padding:5px 12px;font:800 12px DM;cursor:pointer;color:var(--c)}
+.eds button.on{background:var(--c);border-color:var(--c);color:#fff}
+.nota{margin:8px 0 0;font-size:12px;color:#6b7c90}
+iframe{flex:1;width:100%;border:0;display:block;background:#fff}
+</style>
+</head>
+<body>
+<div class="aviso" role="note">Protótipo de redesign: não é o site oficial. Esboço das páginas das editorias</div>
+<div class="topo">
+  <h1>Páginas das editorias: como está ou em lista, como o g1?</h1>
+  <div class="opcoes" id="opcoes">
+    <button data-v="atual">Atual<small>duas notícias por coluna</small></button>
+    <button data-v="novo" class="on">Nova<small>uma notícia por linha, foto ao lado</small></button>
+  </div>
+  <div class="eds" id="eds">
+    <button data-e="policia" style="--c:#5b2bb5">Polícia</button>
+    <button data-e="manaus" style="--c:#0094d6">Manaus</button>
+    <button data-e="politica" style="--c:#d6232f" class="on">Política</button>
+    <button data-e="economia" style="--c:#0f8a5f">Economia</button>
+    <button data-e="esportes" style="--c:#e8731a">Esportes</button>
+    <button data-e="entretenimento" style="--c:#c2185b">Entretenimento</button>
+    <button data-e="parintins" style="--c:#1f4fd1">Parintins</button>
+  </div>
+  <p class="nota">Escolha a versão e a editoria, depois role o site abaixo. No fim da lista, o botão "Veja mais" traz mais notícias.</p>
+</div>
+<iframe id="previa" title="Prévia da página da editoria" src="editoria.html?e=politica&feed=novo"></iframe>
+<script>
+{
+  const f = document.getElementById('previa');
+  let versao = 'novo', editoria = 'politica';
+  const abrir = () => { f.src = 'editoria.html?e=' + editoria + (versao === 'novo' ? '&feed=novo' : '') + '&t=' + Date.now(); };
+  const marcar = (grupo, b) => document.querySelectorAll(grupo + ' button').forEach((x) => x.classList.toggle('on', x === b));
+  document.getElementById('opcoes').onclick = (e) => {
+    const b = e.target.closest('button[data-v]');
+    if (!b) return;
+    marcar('#opcoes', b); versao = b.dataset.v; abrir();
+  };
+  document.getElementById('eds').onclick = (e) => {
+    const b = e.target.closest('button[data-e]');
+    if (!b) return;
+    marcar('#eds', b); editoria = b.dataset.e; abrir();
+  };
+}
+</script>
+</body>
+</html>

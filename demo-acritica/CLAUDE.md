@@ -40,7 +40,9 @@ Leia este arquivo antes de mexer no projeto. Ele resume o que foi decidido no ch
 
 ## Esboços esperando aprovação
 
-Nenhum no momento.
+1. `esboco-editorias-lista.html`: páginas das editorias em **lista, uma notícia por linha** (referência: g1), com foto à esquerda, título na cor da editoria, resumo e "Há X horas em ...". Anúncio a cada 5 notícias, coluna "Mais lidas" fixa à direita no computador e botão "Veja mais" que busca mais 12 notícias da editoria no portal (`buscarEditoria` em aovivo.js). Liga com `?feed=novo`. Ele reclamou que a versão atual (duas notícias por coluna) está feia.
+
+Quando ele aprovar, transforme o esboço em padrão (tire a condição do parâmetro e apague o bloco antigo da editoria em app.js), teste no celular (390 px) e no computador (1366 px) e sincronize GitHub + notebook.
 
 ## Outros arquivos relacionados
 
