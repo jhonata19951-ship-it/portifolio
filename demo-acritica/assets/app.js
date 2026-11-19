@@ -237,6 +237,30 @@ window.iniciarSite = function () {
   if (!ORDEM.includes(temaAtual)) temaAtual = 'preto'; // quem estava no azul vai para o preto
   if (previa) temaAtual = qs.has('preto') ? 'preto' : 'claro';
   aplicarTema(temaAtual);
+  // Celular (esboço ?troca=onda): a faixa passa e cada parte da tela muda de cor
+  // no instante em que a faixa chega nela, como uma onda.
+  function trocarEmOnda(novo, escurecendo) {
+    if (document.body.classList.contains('onda-tema')) return;
+    const vh = innerHeight / 100, DUR = 2000;
+    // centro da faixa ao longo do tempo (mesma curva da animação da faixa)
+    const quando = (y) => {
+      const p = escurecendo ? (y / vh + 20) / 150 : (120 - y / vh) / 150;
+      return Math.max(0, Math.min(1, p)) * DUR;
+    };
+    const partes = [...document.querySelectorAll('.aviso-prototipo, .mhead, .mhead > *, .malta, #conteudo > *, #conteudo > * > *, .rodape, .rodape > *, .mnav, .mgaveta, .cookies, .ancora, .busca')];
+    partes.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      const y = Math.max(0, Math.min(innerHeight, r.top + Math.min(r.height, innerHeight) / 2));
+      el.style.setProperty('--d', Math.round(quando(y) - 200) + 'ms');
+    });
+    document.body.style.setProperty('--d', Math.round(quando(innerHeight / 2) - 200) + 'ms');
+    document.body.classList.add('onda-tema');
+    const f = document.createElement('div');
+    f.className = 'varredura varredura-cel ' + (escurecendo ? 'para-escuro para-chumbo' : 'para-claro');
+    document.body.appendChild(f);
+    aplicarTema(novo);
+    setTimeout(() => { f.remove(); document.body.classList.remove('onda-tema'); partes.forEach((el) => el.style.removeProperty('--d')); document.body.style.removeProperty('--d'); }, DUR + 500);
+  }
   function trocarTema(novo) {
     const atual = document.body.dataset.tema;
     if (novo === atual) return;
@@ -255,6 +279,7 @@ window.iniciarSite = function () {
     // quando ele cobre a tela inteira, o tema troca por baixo, e a cauda da cortina
     // vai revelando o site já no tema novo. Assim nada muda antes da faixa passar.
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || !document.body.animate) { aplicarTema(novo); return; }
+    if (qs.get('troca') === 'onda') { trocarEmOnda(novo, escurecendo); return; }
     if (document.body.classList.contains('trocando-tema-cel')) return;
     document.body.classList.add('trocando-tema-cel');
     const fundo = novo === 'claro' ? '#ffffff' : '#1c1c1e';

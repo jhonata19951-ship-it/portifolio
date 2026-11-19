@@ -827,3 +827,9 @@ body.cel .mhead .lupa{visibility:hidden;pointer-events:none}
 /* Celular: cortina da troca de tema */
 .cortina-tema{position:fixed;left:0;right:0;top:0;pointer-events:none;z-index:2147483647;will-change:transform}
 body.trocando-tema-cel .mnav,body.trocando-tema-cel .mhead{transition:none}
+/* Esboço: troca de tema em onda no celular (cada parte muda quando a faixa passa) */
+body.onda-tema,body.onda-tema *{transition:background-color .4s ease var(--d,0s),color .4s ease var(--d,0s),border-color .4s ease var(--d,0s),fill .4s ease var(--d,0s),stroke .4s ease var(--d,0s),filter .4s ease var(--d,0s),-webkit-text-fill-color .4s ease var(--d,0s)!important}
+body.onda-tema .varredura-cel{transition:none!important;opacity:.95}
+:where(body.cel #conteudo > *){background-color:var(--m-bg)}
+body.onda-tema .varredura-cel{animation-timing-function:linear}
+.varredura.para-chumbo{background:linear-gradient(to bottom,#1c1c1e00 0%,#1c1c1ecc 22%,#07559b 55%,#00a7e2 82%,#00a7e200 100%)}
