@@ -462,6 +462,25 @@ window.iniciarSite = function () {
     const sub = HOME.cards.map(mat).filter(Boolean);
     const aoVivo = window.AO_VIVO ? new Date(AO_VIVO.quando) : null;
     const quando = aoVivo ? `<span class="atualizado">atualizado às ${String(aoVivo.getHours()).padStart(2, '0')}:${String(aoVivo.getMinutes()).padStart(2, '0')}</span>` : '';
+    // Esboço (?editorias=linha): Política, Polícia, Esportes e Entretenimento lado a lado, numa linha só
+    const emLinha = qs.get('editorias') === 'linha';
+    const blocoEds = `    <section class="sec"><div class="wrap"><div class="grid2">
+      <div>${secTit('politica')}${HOME.politica && mat(HOME.politica) ? destaque(mat(HOME.politica)) : ''}${lista(LISTAS.politica || [])}</div>
+      <div>${secTit('policia')}${lista(LISTAS.policia || [])}</div>
+    </div></div></section>
+    <section class="sec"><div class="wrap">${secTit('esportes')}
+      <div class="grid2">${HOME.esportes.map(mat).filter(Boolean).map((m, i) => `<div>${destaque(m)}${i === 1 ? lista(LISTAS.esportes || []) : ''}</div>`).join('')}</div>
+    </div></section>`;
+    const blocoEnt = `    <section class="sec"><div class="wrap">${secTit('entretenimento')}
+      <div class="grid4">${HOME.entretenimento.map(mat).filter(Boolean).map(card).join('')}<div>${lista(LISTAS.entretenimento || [])}</div></div>
+    </div></section>`;
+    const colEd = (k, principal) => {
+      const m = principal || MATERIAS.find((x) => x.ed === k && x.id !== HOME.hero && !HOME.cards.includes(x.id));
+      return `<div class="col-ed">${secTit(k)}${m ? card(m) : ''}${lista((LISTAS[k] || []).filter((i) => !m || i.t !== m.titulo).slice(0, 3))}</div>`;
+    };
+    const linhaEds = `<section class="sec linha-eds"><div class="wrap"><div class="grid-eds">
+      ${colEd('politica', mat(HOME.politica))}${colEd('policia')}${colEd('esportes', mat(HOME.esportes[0]))}${colEd('entretenimento', mat(HOME.entretenimento[0]))}
+    </div></div></section>`;
     $('#conteudo').innerHTML = `
     <div class="pub topo-bb"><div class="wrap"><div class="bb-box">${ad('970 x 200', 'Billboard', 'bb')}<button class="fechar" aria-label="Fechar anúncio" onclick="this.closest('.pub').remove()">×</button></div></div></div>
     <section class="topo"><div class="wrap">
@@ -480,13 +499,7 @@ window.iniciarSite = function () {
     <section class="sec"><div class="wrap">${secTit('manaus', 'Manaus e região')}
       <div class="grid4">${HOME.manaus.map(mat).filter(Boolean).map(card).join('')}</div>
     </div></section>
-    <section class="sec"><div class="wrap"><div class="grid2">
-      <div>${secTit('politica')}${HOME.politica && mat(HOME.politica) ? destaque(mat(HOME.politica)) : ''}${lista(LISTAS.politica || [])}</div>
-      <div>${secTit('policia')}${lista(LISTAS.policia || [])}</div>
-    </div></div></section>
-    <section class="sec"><div class="wrap">${secTit('esportes')}
-      <div class="grid2">${HOME.esportes.map(mat).filter(Boolean).map((m, i) => `<div>${destaque(m)}${i === 1 ? lista(LISTAS.esportes || []) : ''}</div>`).join('')}</div>
-    </div></section>
+    ${emLinha ? linhaEds : blocoEds}
     <section class="video"><div class="wrap">
       <div class="video-tit"><h2>A Crítica em vídeo</h2>${oferecimento()}</div>
       <div class="video-grid">
@@ -499,9 +512,7 @@ window.iniciarSite = function () {
     </div></section>
     ${pubGrande}
     ${blocoParintins}
-    <section class="sec"><div class="wrap">${secTit('entretenimento')}
-      <div class="grid4">${HOME.entretenimento.map(mat).filter(Boolean).map(card).join('')}<div>${lista(LISTAS.entretenimento || [])}</div></div>
-    </div></section>
+${emLinha ? '' : blocoEnt}
     ${pub}
     <section class="sec"><div class="wrap">${secTit('opiniao', 'Opinião')}
       <div class="ops">${OPINIAO.map((o) => `<div class="op"><a ${rota(o)}><small class="kick" style="--c:#0d2340">COLUNA</small><p style="margin-top:8px">${o.t}</p><div class="autor"><i style="background:${o.cor}">${o.ini}</i>${o.autor}</div></a></div>`).join('')}</div>
