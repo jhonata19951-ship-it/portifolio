@@ -36,13 +36,12 @@ Leia este arquivo antes de mexer no projeto. Ele resume o que foi decidido no ch
 - AO VIVO leva ao ao vivo do YouTube da TV A Crítica: https://www.youtube.com/channel/UCnLSKfHkgZ6ujEYCO9jq7Sw/live (`TV.aovivo` em data.js). Os links "A Crítica Play" continuam no Play.
 - Troca de tema no celular em **onda** (aprovada em 19/11): a faixa passa e cada parte da tela muda de cor quando ela chega. A antiga "cortina" foi removida.
 - No computador, Política, Polícia, Esportes e Entretenimento ficam **lado a lado numa linha** (aprovado em 19/11), e o botão da lua troca o tema direto, com um clique, igual ao celular.
+- Páginas das editorias (aprovado em 19/11): **uma notícia por linha**, estrutura inspirada no g1, mas com os elementos do acritica.com oficial: caminho "Início › Editoria", chapéu pequeno em maiúsculas na cor da editoria, título na fonte Martel em tom escuro, resumo, "há X horas em Editoria", coluna "Mais lidas" com números verdes (#18b26b) fixa à direita, anúncio a cada 5 notícias e botão "Veja mais" que busca mais 12 notícias no portal (`buscarEditoria` em aovivo.js). A barra de editorias do topo não muda.
 - Samsung Internet com modo escuro força o site a escurecer. Já existe `color-scheme: only light/only dark`, mas pode não bastar nesse navegador.
 
 ## Esboços esperando aprovação
 
-1. `esboco-editorias-lista.html`: páginas das editorias em **lista, uma notícia por linha** (referência: g1), com foto à esquerda, título na cor da editoria, resumo e "Há X horas em ...". Anúncio a cada 5 notícias, coluna "Mais lidas" fixa à direita no computador e botão "Veja mais" que busca mais 12 notícias da editoria no portal (`buscarEditoria` em aovivo.js). Liga com `?feed=novo`. Ele reclamou que a versão atual (duas notícias por coluna) está feia.
-
-Quando ele aprovar, transforme o esboço em padrão (tire a condição do parâmetro e apague o bloco antigo da editoria em app.js), teste no celular (390 px) e no computador (1366 px) e sincronize GitHub + notebook.
+Nenhum no momento.
 
 ## Outros arquivos relacionados
 

@@ -522,9 +522,8 @@ window.iniciarSite = function () {
     }
   }
 
-  // ---------- Página de editoria ----------
-  // Esboço: editoria em lista, uma notícia por linha, como o g1 (?feed=novo)
-  if (pagina === 'editoria' && qs.get('feed') === 'novo') {
+  // ---------- Página de editoria: uma notícia por linha, com a cara do acritica.com ----------
+  if (pagina === 'editoria') {
     const k = EDITORIAS[edAtual] ? edAtual : 'manaus';
     const e = ed(k);
     document.title = 'Protótipo: ' + e.nome + ' | A Crítica';
@@ -532,10 +531,10 @@ window.iniciarSite = function () {
     // "Há 2 horas", "Há 15 minutos" ou a data, quando for mais antiga
     const quandoRel = (m) => {
       const min = m.ts ? Math.round((Date.now() - m.ts) / 60000) : -1;
-      const t = min < 0 ? (m.data || '') : min < 60 ? `Há ${Math.max(min, 1)} minuto${min > 1 ? 's' : ''}` : min < 1440 ? `Há ${Math.round(min / 60)} hora${Math.round(min / 60) > 1 ? 's' : ''}` : (m.data || '');
-      return `<span class="quando">${t} <i>em</i> ${e.nome}</span>`;
+      const t = min < 0 ? (m.data || '') : min < 60 ? `há ${Math.max(min, 1)} minuto${min > 1 ? 's' : ''}` : min < 1440 ? `há ${Math.round(min / 60)} hora${Math.round(min / 60) > 1 ? 's' : ''}` : (m.data || '');
+      return `<span class="quando">${t} em ${e.nome}</span>`;
     };
-    const fpost = (m, grande) => `<article class="fpost${grande ? ' grande' : ''}"><a href="${linkMat(m)}">${foto(m.img, m.alt, '', grande)}<div class="txt"><h2>${m.titulo}</h2>${m.linha ? `<p>${m.linha}</p>` : ''}${quandoRel(m)}</div></a></article>`;
+    const fpost = (m, grande) => `<article class="fpost${grande ? ' grande' : ''}"><a href="${linkMat(m)}">${foto(m.img, m.alt, '', grande)}<div class="txt"><span class="kicker">${e.nome}</span><h2>${m.titulo}</h2>${m.linha ? `<p>${m.linha}</p>` : ''}${quandoRel(m)}</div></a></article>`;
     const pubFeed = celular ? mad : `<div class="fpub">${ad('728 x 90', 'Publicidade', 'sb')}</div>`;
     // Monta os itens; a cada 5 notícias entra um anúncio
     const itens = (lista, inicio) => lista.map((m, i) => {
@@ -548,12 +547,12 @@ window.iniciarSite = function () {
     let mostradas = novos(MATERIAS.filter((m) => m.ed === k));
     const outras = MATERIAS.filter((m) => m.ed !== k && !['parintins', 'opiniao'].includes(m.ed)).slice(0, 5);
     const lado = celular ? '' : `<aside class="ed-lado"><div class="ed-fixo">
-      <h3>Mais lidas no A Crítica</h3>
+      <h3>Mais lidas</h3>
       <ol>${outras.map((m) => `<li style="--c:${ed(m.ed).cor}"><a href="${linkMat(m)}"><small>${ed(m.ed).nome}</small>${m.titulo}</a></li>`).join('')}</ol>
       ${ad('300 x 250', 'Retângulo médio', 'mr')}
     </div></aside>`;
     $('#conteudo').innerHTML = `
-    <div class="ed-topo" style="--c:${e.cor}"><div class="wrap">${titulo}<p>Notícias de ${e.nome} no A Crítica</p></div></div>
+    <div class="ed-topo" style="--c:${e.cor}"><div class="wrap"><nav class="migalha" aria-label="Você está em"><a href="index.html">Início</a><span aria-hidden="true">›</span>${e.nome}</nav>${titulo}<p>Notícias de ${e.nome} no A Crítica</p></div></div>
     ${k === 'parintins' ? blocoParintins : ''}
     <section class="ed-feed" style="--c:${e.cor}"><div class="wrap">
       <div class="ed-col"><div id="ed-lista">${itens(mostradas, 0)}</div>
@@ -584,27 +583,6 @@ window.iniciarSite = function () {
     };
     botao.addEventListener('click', () => carregar(false));
     carregar(true);
-  } else if (pagina === 'editoria') {
-    const k = EDITORIAS[edAtual] ? edAtual : 'manaus';
-    const e = ed(k);
-    document.title = 'Protótipo: ' + e.nome + ' | A Crítica';
-    const daEd = MATERIAS.filter((m) => m.ed === k);
-    const outras = MATERIAS.filter((m) => m.ed !== k);
-    const titulo = k === 'parintins' ? `<h1 class="pin">${e.nome}</h1>` : `<h1>${e.nome}</h1>`;
-    let corpo;
-    if (k === 'parintins') {
-      corpo = blocoParintins;
-    } else {
-      const principais = daEd.length ? daEd : outras.slice(0, 1);
-      corpo = `<section class="sec"><div class="wrap">
-        <div class="grid2">${destaque(principais[0])}<div>${principais.slice(1).map(card).join('') || ''}${LISTAS[k] ? lista(LISTAS[k]) : ''}</div></div>
-      </div></section>`;
-    }
-    $('#conteudo').innerHTML = `
-    <div class="ed-topo" style="--c:${e.cor}"><div class="wrap">${titulo}<p>Notícias de ${e.nome} no A Crítica</p></div></div>
-    ${corpo}
-    ${pub}
-    <section class="sec"><div class="wrap">${secTit('geral', 'Outras notícias')}<div class="grid4">${outras.slice(0, 4).map(card).join('')}</div></div></section>`;
   }
 };
 
