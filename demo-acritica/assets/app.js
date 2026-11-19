@@ -251,16 +251,32 @@ window.iniciarSite = function () {
       return;
     }
     // Celular: sem View Transition (alguns navegadores achatam a tela na captura).
-    // A faixa em degradê passa por cima enquanto as cores mudam suavemente.
-    document.body.classList.add('trocando-tema');
-    let faixaCel = null;
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      faixaCel = document.createElement('div');
-      faixaCel.className = 'varredura varredura-cel ' + (escurecendo ? (novo === 'preto' ? 'para-escuro para-preto' : 'para-escuro') : 'para-claro');
-      document.body.appendChild(faixaCel);
+    // Uma cortina em degradê atravessa a tela. O miolo dela tem a cor do tema novo:
+    // quando ele cobre a tela inteira, o tema troca por baixo, e a cauda da cortina
+    // vai revelando o site já no tema novo. Assim nada muda antes da faixa passar.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !document.body.animate) { aplicarTema(novo); return; }
+    if (document.body.classList.contains('trocando-tema-cel')) return;
+    document.body.classList.add('trocando-tema-cel');
+    const fundo = novo === 'claro' ? '#ffffff' : '#1c1c1e';
+    const c = document.createElement('div');
+    c.className = 'cortina-tema';
+    // Altura total 210vh: 30vh de cauda suave, 140vh de cor sólida e 40vh de borda colorida
+    const vh = innerHeight / 100;
+    let quadros;
+    if (escurecendo) {
+      // desce: a borda de baixo chega primeiro (azul claro, depois azul escuro)
+      c.style.background = `linear-gradient(to bottom, ${fundo}00 0, ${fundo} ${30 * vh}px, ${fundo} ${170 * vh}px, #07559b ${185 * vh}px, #00a7e2 ${200 * vh}px, #00a7e200 ${210 * vh}px)`;
+      quadros = [{ transform: `translateY(${-210 * vh}px)`, easing: 'cubic-bezier(.5,0,.75,1)' }, { transform: `translateY(${-50 * vh}px)`, offset: 0.5, easing: 'cubic-bezier(.25,0,.5,1)' }, { transform: `translateY(${100 * vh}px)` }];
+    } else {
+      // sobe: a borda de cima chega primeiro (azul claro e um azul suave)
+      c.style.background = `linear-gradient(to bottom, #00a7e200 0, #00a7e2 ${10 * vh}px, #bfe6f8 ${25 * vh}px, ${fundo} ${40 * vh}px, ${fundo} ${180 * vh}px, ${fundo}00 ${210 * vh}px)`;
+      quadros = [{ transform: `translateY(${100 * vh}px)`, easing: 'cubic-bezier(.5,0,.75,1)' }, { transform: `translateY(${-60 * vh}px)`, offset: 0.5, easing: 'cubic-bezier(.25,0,.5,1)' }, { transform: `translateY(${-210 * vh}px)` }];
     }
-    aplicarTema(novo);
-    setTimeout(() => { document.body.classList.remove('trocando-tema'); if (faixaCel) faixaCel.remove(); }, 2100);
+    c.style.height = 210 * vh + 'px';
+    document.body.appendChild(c);
+    const anim = c.animate(quadros, { duration: 2000, fill: 'forwards' });
+    setTimeout(() => aplicarTema(novo), 1000); // no meio: a cor sólida cobre a tela toda
+    anim.finished.then(() => { c.remove(); document.body.classList.remove('trocando-tema-cel'); }, () => { c.remove(); document.body.classList.remove('trocando-tema-cel'); aplicarTema(novo); });
   }
   temaBt.onclick = (e) => {
     e.stopPropagation();

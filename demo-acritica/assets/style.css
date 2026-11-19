@@ -824,3 +824,6 @@ body[data-topo="azul"]:not(.noturno) .head .ajustes-bt{color:#fff;background:#ff
 }
 /* Celular: a busca fica só na barra de baixo (a lupa do topo some, o logo continua centralizado) */
 body.cel .mhead .lupa{visibility:hidden;pointer-events:none}
+/* Celular: cortina da troca de tema */
+.cortina-tema{position:fixed;left:0;right:0;top:0;pointer-events:none;z-index:2147483647;will-change:transform}
+body.trocando-tema-cel .mnav,body.trocando-tema-cel .mhead{transition:none}
