@@ -34,14 +34,13 @@ Leia este arquivo antes de mexer no projeto. Ele resume o que foi decidido no ch
 - Listras também na linha das editorias do celular.
 - Fotos das páginas internas em 16:9, sem cortar o texto das artes.
 - AO VIVO leva ao ao vivo do YouTube da TV A Crítica: https://www.youtube.com/channel/UCnLSKfHkgZ6ujEYCO9jq7Sw/live (`TV.aovivo` em data.js). Os links "A Crítica Play" continuam no Play.
+- Troca de tema no celular em **onda** (aprovada em 19/11): a faixa passa e cada parte da tela muda de cor quando ela chega. A antiga "cortina" foi removida.
+- No computador, Política, Polícia, Esportes e Entretenimento ficam **lado a lado numa linha** (aprovado em 19/11), e o botão da lua troca o tema direto, com um clique, igual ao celular.
 - Samsung Internet com modo escuro força o site a escurecer. Já existe `color-scheme: only light/only dark`, mas pode não bastar nesse navegador.
 
 ## Esboços esperando aprovação
 
-1. `esboco-troca-tema.html`: troca de tema em **onda** no celular (`?troca=onda`). Hoje o padrão do celular é a "cortina", que ele achou estranha. Ele ainda não respondeu sobre a onda.
-2. `esboco-editorias.html`: no computador, Política, Polícia, Esportes e Entretenimento **lado a lado numa linha** (`?editorias=linha`). No mesmo esboço, o botão de tema do computador troca direto, sem abrir menu (como no celular).
-
-Quando ele aprovar, transforme o esboço em padrão (tire a condição do parâmetro), teste no celular (390 px) e no computador (1366 px) e sincronize GitHub + notebook.
+Nenhum no momento.
 
 ## Outros arquivos relacionados
 

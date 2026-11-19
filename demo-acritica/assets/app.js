@@ -237,7 +237,7 @@ window.iniciarSite = function () {
   if (!ORDEM.includes(temaAtual)) temaAtual = 'preto'; // quem estava no azul vai para o preto
   if (previa) temaAtual = qs.has('preto') ? 'preto' : 'claro';
   aplicarTema(temaAtual);
-  // Celular (esboço ?troca=onda): a faixa passa e cada parte da tela muda de cor
+  // Celular: a faixa passa e cada parte da tela muda de cor
   // no instante em que a faixa chega nela, como uma onda.
   function trocarEmOnda(novo, escurecendo) {
     if (document.body.classList.contains('onda-tema')) return;
@@ -275,39 +275,14 @@ window.iniciarSite = function () {
       return;
     }
     // Celular: sem View Transition (alguns navegadores achatam a tela na captura).
-    // Uma cortina em degradê atravessa a tela. O miolo dela tem a cor do tema novo:
-    // quando ele cobre a tela inteira, o tema troca por baixo, e a cauda da cortina
-    // vai revelando o site já no tema novo. Assim nada muda antes da faixa passar.
+    // A faixa passa e cada parte da tela muda de cor quando a faixa chega nela (onda).
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || !document.body.animate) { aplicarTema(novo); return; }
-    if (qs.get('troca') === 'onda') { trocarEmOnda(novo, escurecendo); return; }
-    if (document.body.classList.contains('trocando-tema-cel')) return;
-    document.body.classList.add('trocando-tema-cel');
-    const fundo = novo === 'claro' ? '#ffffff' : '#1c1c1e';
-    const c = document.createElement('div');
-    c.className = 'cortina-tema';
-    // Altura total 210vh: 30vh de cauda suave, 140vh de cor sólida e 40vh de borda colorida
-    const vh = innerHeight / 100;
-    let quadros;
-    if (escurecendo) {
-      // desce: a borda de baixo chega primeiro (azul claro, depois azul escuro)
-      c.style.background = `linear-gradient(to bottom, ${fundo}00 0, ${fundo} ${30 * vh}px, ${fundo} ${170 * vh}px, #07559b ${185 * vh}px, #00a7e2 ${200 * vh}px, #00a7e200 ${210 * vh}px)`;
-      quadros = [{ transform: `translateY(${-210 * vh}px)`, easing: 'cubic-bezier(.5,0,.75,1)' }, { transform: `translateY(${-50 * vh}px)`, offset: 0.5, easing: 'cubic-bezier(.25,0,.5,1)' }, { transform: `translateY(${100 * vh}px)` }];
-    } else {
-      // sobe: a borda de cima chega primeiro (azul claro e um azul suave)
-      c.style.background = `linear-gradient(to bottom, #00a7e200 0, #00a7e2 ${10 * vh}px, #bfe6f8 ${25 * vh}px, ${fundo} ${40 * vh}px, ${fundo} ${180 * vh}px, ${fundo}00 ${210 * vh}px)`;
-      quadros = [{ transform: `translateY(${100 * vh}px)`, easing: 'cubic-bezier(.5,0,.75,1)' }, { transform: `translateY(${-60 * vh}px)`, offset: 0.5, easing: 'cubic-bezier(.25,0,.5,1)' }, { transform: `translateY(${-210 * vh}px)` }];
-    }
-    c.style.height = 210 * vh + 'px';
-    document.body.appendChild(c);
-    const anim = c.animate(quadros, { duration: 2000, fill: 'forwards' });
-    setTimeout(() => aplicarTema(novo), 1000); // no meio: a cor sólida cobre a tela toda
-    anim.finished.then(() => { c.remove(); document.body.classList.remove('trocando-tema-cel'); }, () => { c.remove(); document.body.classList.remove('trocando-tema-cel'); aplicarTema(novo); });
+    trocarEmOnda(novo, escurecendo);
   }
   temaBt.onclick = (e) => {
     e.stopPropagation();
-    // Celular, e no computador dentro do esboço: um clique já troca entre Branco e Preto
-    if (celular || qs.get('editorias') === 'linha') { trocarTema(document.body.dataset.tema === 'claro' ? 'preto' : 'claro'); return; }
-    const ab = temaMenu.classList.toggle('aberto'); temaBt.setAttribute('aria-expanded', ab);
+    // Celular e computador: um clique já troca entre Branco e Preto
+    trocarTema(document.body.dataset.tema === 'claro' ? 'preto' : 'claro');
   };
   temaMenu.onclick = (e) => {
     e.stopPropagation();
@@ -463,18 +438,7 @@ window.iniciarSite = function () {
     const sub = HOME.cards.map(mat).filter(Boolean);
     const aoVivo = window.AO_VIVO ? new Date(AO_VIVO.quando) : null;
     const quando = aoVivo ? `<span class="atualizado">atualizado às ${String(aoVivo.getHours()).padStart(2, '0')}:${String(aoVivo.getMinutes()).padStart(2, '0')}</span>` : '';
-    // Esboço (?editorias=linha): Política, Polícia, Esportes e Entretenimento lado a lado, numa linha só
-    const emLinha = qs.get('editorias') === 'linha';
-    const blocoEds = `    <section class="sec"><div class="wrap"><div class="grid2">
-      <div>${secTit('politica')}${HOME.politica && mat(HOME.politica) ? destaque(mat(HOME.politica)) : ''}${lista(LISTAS.politica || [])}</div>
-      <div>${secTit('policia')}${lista(LISTAS.policia || [])}</div>
-    </div></div></section>
-    <section class="sec"><div class="wrap">${secTit('esportes')}
-      <div class="grid2">${HOME.esportes.map(mat).filter(Boolean).map((m, i) => `<div>${destaque(m)}${i === 1 ? lista(LISTAS.esportes || []) : ''}</div>`).join('')}</div>
-    </div></section>`;
-    const blocoEnt = `    <section class="sec"><div class="wrap">${secTit('entretenimento')}
-      <div class="grid4">${HOME.entretenimento.map(mat).filter(Boolean).map(card).join('')}<div>${lista(LISTAS.entretenimento || [])}</div></div>
-    </div></section>`;
+    // Política, Polícia, Esportes e Entretenimento lado a lado, numa linha só
     const colEd = (k, principal) => {
       const m = principal || MATERIAS.find((x) => x.ed === k && x.id !== HOME.hero && !HOME.cards.includes(x.id));
       return `<div class="col-ed">${secTit(k)}${m ? card(m) : ''}${lista((LISTAS[k] || []).filter((i) => !m || i.t !== m.titulo).slice(0, 3))}</div>`;
@@ -500,7 +464,7 @@ window.iniciarSite = function () {
     <section class="sec"><div class="wrap">${secTit('manaus', 'Manaus e região')}
       <div class="grid4">${HOME.manaus.map(mat).filter(Boolean).map(card).join('')}</div>
     </div></section>
-    ${emLinha ? linhaEds : blocoEds}
+    ${linhaEds}
     <section class="video"><div class="wrap">
       <div class="video-tit"><h2>A Crítica em vídeo</h2>${oferecimento()}</div>
       <div class="video-grid">
@@ -513,7 +477,6 @@ window.iniciarSite = function () {
     </div></section>
     ${pubGrande}
     ${blocoParintins}
-${emLinha ? '' : blocoEnt}
     ${pub}
     <section class="sec"><div class="wrap">${secTit('opiniao', 'Opinião')}
       <div class="ops">${OPINIAO.map((o) => `<div class="op"><a ${rota(o)}><small class="kick" style="--c:#0d2340">COLUNA</small><p style="margin-top:8px">${o.t}</p><div class="autor"><i style="background:${o.cor}">${o.ini}</i>${o.autor}</div></a></div>`).join('')}</div>
