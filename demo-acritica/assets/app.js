@@ -305,7 +305,8 @@ window.iniciarSite = function () {
   }
   temaBt.onclick = (e) => {
     e.stopPropagation();
-    if (celular) { trocarTema(document.body.dataset.tema === 'claro' ? 'preto' : 'claro'); return; }
+    // Celular, e no computador dentro do esboço: um clique já troca entre Branco e Preto
+    if (celular || qs.get('editorias') === 'linha') { trocarTema(document.body.dataset.tema === 'claro' ? 'preto' : 'claro'); return; }
     const ab = temaMenu.classList.toggle('aberto'); temaBt.setAttribute('aria-expanded', ab);
   };
   temaMenu.onclick = (e) => {
