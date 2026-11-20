@@ -919,3 +919,11 @@ body.cel .migalha{display:none}
   .fpost.grande h2{font-size:32px;letter-spacing:-.5px}
   .fpost.grande p{font-size:17px;-webkit-line-clamp:4}
 }
+
+/* Fluidez: a barra colorida anda deslizando uma camada (feito pela placa de vídeo),
+   em vez de redesenhar a barra inteira a cada quadro. Mesmo visual e velocidade de antes. */
+.regua{position:relative;overflow:hidden;animation:none}
+.regua::before{content:"";position:absolute;top:0;bottom:0;left:0;width:200%;background:inherit;background-size:100% 100%;animation:regua-desliza 40s linear infinite;will-change:transform}
+@keyframes regua-desliza{to{transform:translateX(-50%)}}
+body.barra-original .regua::before{display:none}
+@media (prefers-reduced-motion:reduce){.regua::before{animation:none}}

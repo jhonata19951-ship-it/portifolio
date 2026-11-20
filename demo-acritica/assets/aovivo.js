@@ -27,6 +27,10 @@
     }
   }
 
+  // Fila: o portal recusa pedidos ao mesmo tempo, então cada busca espera a anterior terminar
+  let fila = Promise.resolve();
+  const naFila = (fn) => { const p = fila.then(fn, fn); fila = p.catch(() => {}); return p; };
+
   // Converte um post do WordPress no formato usado pelo site
   function converter(p) {
     const emb = p._embedded || {};
@@ -164,13 +168,13 @@
 
   function baixar() {
     // um pedido de cada vez: o portal recusa pedidos em paralelo
-    const pedidos = (async () => {
+    const pedidos = naFila(async () => {
       const posts = await comTempo(API + 'posts?per_page=50&' + EMB, 10000);
       const capa = await comTempo(API + '42wp_homepage?per_page=1&_fields=content', 8000).catch(() => []);
       const par = await comTempo(API + 'posts?categories=13&per_page=12&' + EMB, 8000).catch(() => []);
       const col = await comTempo(API + '42wp_column?per_page=3&' + EMB, 8000).catch(() => []);
       return [posts, capa, par, col];
-    })();
+    });
     return pedidos.then(([posts, capa, par, col]) => {
       // links da manchete e dos destaques da capa do portal
       let linksCapa = [];
@@ -191,7 +195,7 @@
   try { window.EXTRAS = JSON.parse(localStorage.getItem(CHAVE_EXTRAS) || '[]'); } catch (e) { window.EXTRAS = []; }
   window.buscarEditoria = function (k, pag) {
     if (!ID_ED[k]) return Promise.resolve([]);
-    return comTempo(API + 'posts?categories=' + ID_ED[k] + '&per_page=12&page=' + (pag || 1) + '&' + EMB, 9000).then((r) => {
+    return naFila(() => comTempo(API + 'posts?categories=' + ID_ED[k] + '&per_page=12&page=' + (pag || 1) + '&' + EMB, 9000)).then((r) => {
       const lista = r.map(converter).filter((m) => m.url).map((m) => Object.assign(m, { ed: k }));
       // guarda neste navegador para a página da matéria achar a notícia depois
       try {
@@ -206,7 +210,7 @@
   // Texto da matéria (só os primeiros parágrafos, o resto fica no portal)
   window.buscarTexto = function (m) {
     const tipo = m.tipo || 'posts';
-    return comTempo(API + tipo + '?slug=' + encodeURIComponent(m.id) + '&_fields=content', 7000).then((r) => {
+    return naFila(() => comTempo(API + tipo + '?slug=' + encodeURIComponent(m.id) + '&_fields=content', 7000)).then((r) => {
       if (!r[0]) return [];
       const d = ler(r[0].content.rendered);
       return [...d.querySelectorAll('p')].map((p) => esc(p.textContent.trim())).filter((t) => t.length > 40).slice(0, 3);

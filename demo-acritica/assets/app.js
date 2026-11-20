@@ -531,7 +531,7 @@ window.iniciarSite = function () {
     // "Há 2 horas", "Há 15 minutos" ou a data, quando for mais antiga
     const quandoRel = (m) => {
       const min = m.ts ? Math.round((Date.now() - m.ts) / 60000) : -1;
-      const t = min < 0 ? (m.data || '') : min < 60 ? `há ${Math.max(min, 1)} minuto${min > 1 ? 's' : ''}` : min < 1440 ? `há ${Math.round(min / 60)} hora${Math.round(min / 60) > 1 ? 's' : ''}` : (m.data || '');
+      const t = min < 0 ? (m.data || '') : min < 60 ? `há ${Math.max(min, 1)} minuto${min > 1 ? 's' : ''}` : min < 1440 ? `há ${Math.floor(min / 60)} hora${min >= 120 ? 's' : ''}` : (m.data || '');
       return `<span class="quando">${t} em ${e.nome}</span>`;
     };
     const fpost = (m, grande) => `<article class="fpost${grande ? ' grande' : ''}"><a href="${linkMat(m)}">${foto(m.img, m.alt, '', grande)}<div class="txt"><span class="kicker">${e.nome}</span><h2>${m.titulo}</h2>${m.linha ? `<p>${m.linha}</p>` : ''}${quandoRel(m)}</div></a></article>`;
@@ -542,9 +542,13 @@ window.iniciarSite = function () {
       const html = celular ? (n === 0 ? fcard(m) : fmini(m)) : fpost(m, n === 0);
       return html + ((n + 1) % 5 === 0 ? pubFeed : '');
     }).join('');
-    const vistos = new Set();
-    const novos = (lista) => lista.filter((m) => m && !vistos.has(m.id) && vistos.add(m.id));
-    let mostradas = novos(MATERIAS.filter((m) => m.ed === k));
+    // Junta listas sem repetir notícia e põe a mais recente primeiro
+    const juntar = (...listas) => {
+      const ja = new Set();
+      return [].concat(...listas).filter((m) => m && m.id && !ja.has(m.id) && ja.add(m.id)).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    };
+    // Abre na hora com o que já está guardado neste navegador (última visita) e com as notícias da capa
+    let mostradas = juntar((window.EXTRAS || []).filter((m) => m.ed === k), MATERIAS.filter((m) => m.ed === k));
     const outras = MATERIAS.filter((m) => m.ed !== k && !['parintins', 'opiniao'].includes(m.ed)).slice(0, 5);
     const lado = celular ? '' : `<aside class="ed-lado"><div class="ed-fixo">
       <h3>Mais lidas</h3>
@@ -562,24 +566,31 @@ window.iniciarSite = function () {
     // Busca no portal as notícias só desta editoria (12 por vez)
     let pag = 1;
     const botao = $('#ed-mais');
+    const caixa = $('#ed-lista');
+    const pronto = () => { botao.disabled = false; botao.classList.remove('esperando'); };
     const carregar = (primeira) => {
       if (!window.buscarEditoria) { botao.remove(); return; }
       botao.disabled = true; botao.classList.add('esperando');
       buscarEditoria(k, pag).then((lista) => {
-        if (primeira) {
-          // troca a primeira lista pela do portal, mais completa e em ordem de horário
-          vistos.clear();
-          mostradas = novos(lista.concat(mostradas));
-          $('#ed-lista').innerHTML = itens(mostradas, 0);
+        if (primeira && lista.length) {
+          // a lista do portal manda: o que for mais antigo que ela chega depois, pelo "Veja mais"
+          const limite = lista[lista.length - 1].ts || 0;
+          const nova = juntar(lista, mostradas.filter((m) => (m.ts || 0) >= limite));
+          const iguais = nova.length >= mostradas.length && mostradas.every((m, i) => nova[i].id === m.id);
+          // Fluidez: se o começo da lista não mudou, só acrescenta o que falta (nada pula na tela)
+          if (iguais) caixa.insertAdjacentHTML('beforeend', itens(nova.slice(mostradas.length), mostradas.length));
+          else caixa.innerHTML = itens(nova, 0);
+          mostradas = nova;
         } else {
-          const extra = novos(lista);
-          $('#ed-lista').insertAdjacentHTML('beforeend', itens(extra, mostradas.length));
+          const ja = new Set(mostradas.map((m) => m.id));
+          const extra = lista.filter((m) => !ja.has(m.id));
+          caixa.insertAdjacentHTML('beforeend', itens(extra, mostradas.length));
           mostradas = mostradas.concat(extra);
         }
         pag++;
-        botao.disabled = false; botao.classList.remove('esperando');
+        pronto();
         if (lista.length < 12) botao.remove();
-      }).catch(() => { botao.disabled = false; botao.classList.remove('esperando'); if (!mostradas.length) botao.remove(); });
+      }).catch(() => { pronto(); if (!mostradas.length) botao.remove(); });
     };
     botao.addEventListener('click', () => carregar(false));
     carregar(true);
