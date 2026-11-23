@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f4f1ea">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Portfólio de Jhonata Alves Sá: sistemas de apuração e grafismo para TV. Versão clara.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f4f1ea'/%3E%3Crect x='5' y='8' width='3' height='16' fill='%23e9c341'/%3E%3Crect x='8' y='8' width='3' height='16' fill='%2340b9d4'/%3E%3Crect x='11' y='8' width='3' height='16' fill='%2351ab65'/%3E%3Crect x='14' y='8' width='3' height='16' fill='%23c45bb0'/%3E%3Crect x='17' y='8' width='3' height='16' fill='%23de4d4a'/%3E%3Crect x='20' y='8' width='3' height='16' fill='%233c5fd6'/%3E%3Crect x='23' y='8' width='4' height='16' fill='%2316171c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<title>Jhonata Alves Sá | Apuração e grafismo para TV</title>
+<style>
+/*
+VERSÃO CLARA (alternativa ao portfolio-animado, que é escuro)
+IDEIA: um estúdio de dia. Papel claro, tinta escura e as barras coloridas de teste de TV como cor de destaque.
+EFEITOS PRÓPRIOS: tela ligando como TV antiga, projetos passando na horizontal, antes e depois de arrastar,
+números girando como odômetro, luz de estúdio que segue o mouse e grade de programas acendendo em sequência.
+*/
+@font-face{font-family:'Inter Tight';src:url(../midia/fonts/inter-tight-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url(../midia/fonts/inter-tight-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url(../midia/fonts/inter-tight-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter Tight';src:url(../midia/fonts/inter-tight-latin-800-normal.woff2) format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url(../midia/fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+
+:root{
+  --papel:#f4f1ea;--papel2:#ebe6db;--cartao:#fffdf8;--tinta:#16171c;--mut:#5b5e68;--mut2:#7b7e88;--linha:#16171c1a;
+  --b1:#e9c341;--b2:#40b9d4;--b3:#51ab65;--b4:#c45bb0;--b5:#de4d4a;--b6:#3c5fd6;
+  --barras:linear-gradient(90deg,var(--b1) 0 16.66%,var(--b2) 0 33.33%,var(--b3) 0 50%,var(--b4) 0 66.66%,var(--b5) 0 83.33%,var(--b6) 0);
+  --monitor:#0c0e14;
+}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}
+html{scroll-padding-top:90px;background:var(--papel)}
+body{font-family:'Inter Tight',system-ui,sans-serif;background:var(--papel);color:var(--tinta);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img,video{display:block;max-width:100%}
+.box{max-width:1240px;margin:0 auto;padding:0 max(4vw,20px)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+h1,h2{font-weight:800;letter-spacing:-.035em;line-height:.98;text-wrap:balance}
+h2{font-size:clamp(36px,5vw,68px);margin:14px 0 18px}
+.lead{font-size:clamp(17px,1.5vw,20px);color:var(--mut);max-width:600px}
+.marca{background:linear-gradient(transparent 62%,#e9c34188 62% 92%,transparent 92%)}
+section{position:relative}
+:focus-visible{outline:2px solid var(--b6);outline-offset:3px}
+
+/* textura de papel e luz de estúdio que segue o mouse */
+.papel{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(#16171c10 1px,transparent 1px);background-size:22px 22px}
+.spot{position:fixed;width:900px;height:900px;left:0;top:0;margin:-450px 0 0 -450px;border-radius:50%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle,#fff8dc 0%,#fff8dc80 30%,transparent 65%);opacity:0;transition:opacity .6s}
+
+/* barras de teste: progresso da página */
+.prog{position:fixed;top:0;left:0;right:0;height:4px;background:var(--barras);transform-origin:0 50%;transform:scaleX(0);z-index:31}
+
+/* menu */
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:30;display:flex;gap:2px;padding:6px;border-radius:999px;
+  background:#fffdf8e6;border:1px solid var(--linha);box-shadow:0 10px 30px #16171c14;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  max-width:calc(100vw - 24px);overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{white-space:nowrap;color:var(--mut);text-decoration:none;font-size:14px;padding:9px 14px;border-radius:999px;transition:background .25s,color .25s}
+nav a:hover{background:#16171c0d;color:var(--tinta)}
+nav a.nome{color:var(--tinta);font-weight:700}
+nav a.ativo{background:var(--tinta);color:var(--papel)}
+@media(max-width:760px){nav a{flex:none;font-size:13px;padding:8px 11px}}
+
+/* abertura */
+.hero{min-height:100svh;display:flex;align-items:center;padding:130px 0 70px}
+.hero h1{font-size:clamp(48px,8.6vw,128px);margin:22px 0 26px}
+.linha-h{display:block;position:relative}
+.scan{position:absolute;left:-2%;right:-2%;height:3px;top:0;background:var(--barras);opacity:0;pointer-events:none}
+.ao-vivo{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 10px;border-radius:999px;background:var(--cartao);border:1px solid var(--linha);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em}
+.ao-vivo i{width:9px;height:9px;border-radius:50%;background:var(--b5);animation:pisca 1.6s infinite}
+@keyframes pisca{50%{opacity:.25}}
+.nums{display:grid;grid-template-columns:repeat(4,auto);margin-top:46px;width:max-content;max-width:100%;background:var(--cartao);border:1px solid var(--linha);border-radius:18px;overflow:hidden}
+.nums div{padding:20px 28px;border-right:1px solid var(--linha)}
+.nums div:last-child{border-right:0}
+.nums b{display:flex;font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.nums div>span{font-size:14px;color:var(--mut2)}
+@media(max-width:760px){.nums{grid-template-columns:1fr 1fr;width:100%}.nums div:nth-child(2){border-right:0}.nums div:nth-child(-n+2){border-bottom:1px solid var(--linha)}}
+
+/* odômetro: cada dígito é uma coluna de 0 a 9 que gira */
+.odo{display:inline-flex;align-items:flex-start;overflow:hidden;height:1.1em;line-height:1.1}
+.odo .col{display:flex;flex-direction:column;flex:none}
+.odo .col span{display:block;height:1.1em;flex:none}
+
+/* vídeo de apresentação: TV ligando */
+.reel{padding:30px 0 120px}
+.tv{background:var(--monitor);border-radius:26px;padding:14px;box-shadow:0 40px 80px #16171c33,0 0 0 1px #16171c;position:relative}
+.tv .tela{border-radius:14px;overflow:hidden;background:#000;position:relative}
+.tv video{width:100%}
+.tv .luzinha{position:absolute;right:26px;bottom:-26px;width:8px;height:8px;border-radius:50%;background:var(--b3);box-shadow:0 0 10px var(--b3)}
+.rod{display:flex;justify-content:space-between;gap:12px;padding:14px 4px 0;color:var(--mut2);font-size:14px}
+.rod span:last-child{white-space:nowrap}
+
+/* projetos: trilho horizontal no computador, coluna no celular */
+.galeria{padding:80px 0 40px}
+.galeria .topo{margin-bottom:30px}
+.pista{display:flex;flex-direction:column;gap:90px}
+.painel{display:grid;grid-template-columns:5fr 7fr;gap:44px;align-items:center}
+.painel .n{font-size:clamp(70px,9vw,140px);font-weight:800;line-height:.8;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.5px var(--tinta);opacity:.18}
+ul{list-style:none;margin-top:20px}
+li{position:relative;padding-left:26px;margin:9px 0;font-size:17px}
+li:before{content:"";position:absolute;left:0;top:7px;width:14px;height:11px;border-radius:2px;background:var(--barras)}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;padding:2px 8px;border-radius:5px;margin-left:8px;vertical-align:2px;background:var(--tinta);color:var(--papel)}
+.tag.m{background:var(--b3);color:#0f2a17}
+.monitor{background:var(--monitor);border-radius:20px;padding:10px;box-shadow:0 30px 60px #16171c2e;transform-style:preserve-3d;will-change:transform}
+.monitor .fv{border-radius:12px;overflow:hidden;background:#070a12;position:relative;aspect-ratio:16/9}
+.monitor video{width:100%;height:100%;object-fit:cover}
+.monitor video.tr{mix-blend-mode:screen;object-fit:contain}
+.monitor .rod{color:#9aa0ad;padding:10px 6px 2px;font-size:13px}
+.contador{font-size:clamp(56px,7vw,96px);font-weight:800;letter-spacing:-.03em;line-height:1;margin-top:18px}
+.selo{display:inline-flex;gap:8px;margin-top:10px;padding:7px 14px;border-radius:999px;background:var(--cartao);border:1px solid var(--linha);font-size:15px;color:var(--mut)}
+.selo b{color:var(--tinta)}
+@media(max-width:900px){.painel{grid-template-columns:1fr;gap:26px}}
+
+/* versão horizontal (ativada por script no computador) */
+.galeria.horiz{padding:0}
+.galeria.horiz .fixo{height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding-top:70px}
+.galeria.horiz .pista{flex-direction:row;gap:0;width:max-content;max-width:none;margin:0;padding:0;will-change:transform}
+.galeria.horiz .painel{width:var(--vw,100vw);padding:0 max(5vw,40px);grid-template-columns:5fr 7fr}
+.galeria.horiz .topo{position:absolute;top:92px;left:max(4vw,20px);margin:0}
+.contagem{position:absolute;bottom:34px;left:max(4vw,20px);right:max(4vw,20px);display:none;gap:10px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--mut)}
+.galeria.horiz .contagem{display:flex}
+.contagem .trilho{flex:1;height:3px;background:var(--linha);border-radius:3px;overflow:hidden}
+.contagem .trilho i{display:block;height:100%;background:var(--barras);transform-origin:0 50%;transform:scaleX(0)}
+
+/* grade de programas acendendo como tally */
+.grade-prog{padding:40px 0 110px}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.chip{display:flex;align-items:center;gap:10px;padding:14px 20px;border-radius:14px;background:var(--cartao);border:1px solid var(--linha);font-size:clamp(18px,2vw,26px);font-weight:700;transition:background .35s,color .35s,translate .35s,border-color .35s}
+.chip i{width:10px;height:10px;border-radius:50%;background:#16171c22;transition:background .35s,box-shadow .35s}
+.chip.on{background:var(--tinta);color:var(--papel);translate:0 -4px;border-color:var(--tinta)}
+.chip.on i{background:var(--b5);box-shadow:0 0 12px var(--b5)}
+
+/* antes e agora: divisória de arrastar */
+.ba{padding:110px 0}
+.compara{display:grid;gap:70px;margin-top:40px}
+.caso{display:grid;grid-template-columns:4fr 8fr;gap:44px;align-items:center}
+@media(max-width:900px){.caso{grid-template-columns:1fr;gap:22px}}
+.escolha{display:flex;gap:8px;margin-top:18px}
+.escolha button{font:inherit;font-size:14px;padding:8px 14px;border-radius:999px;border:1px solid var(--linha);background:var(--cartao);color:var(--mut);cursor:pointer}
+.escolha button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
+.slider{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--monitor);box-shadow:0 30px 60px #16171c2e;touch-action:pan-y;user-select:none;cursor:ew-resize}
+.slider img,.slider video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slider .depois{clip-path:inset(0 0 0 var(--x,50%))}
+.slider .depois video{object-fit:contain;mix-blend-mode:screen;background:#070a12}
+.slider .lado{position:absolute;bottom:12px;padding:5px 10px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;background:#fffdf8e6;color:var(--tinta)}
+.slider .lado.e{left:12px}.slider .lado.d{right:12px;background:var(--tinta);color:var(--papel)}
+.slider .divisa{position:absolute;top:0;bottom:0;left:var(--x,50%);width:3px;margin-left:-1.5px;background:linear-gradient(180deg,var(--b1) 0 16.66%,var(--b2) 0 33.33%,var(--b3) 0 50%,var(--b4) 0 66.66%,var(--b5) 0 83.33%,var(--b6) 0)}
+.slider .alca{position:absolute;top:50%;left:var(--x,50%);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:var(--cartao);border:1px solid var(--linha);box-shadow:0 6px 20px #0004;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--tinta)}
+.slider:focus-visible{outline:3px solid var(--b6);outline-offset:4px}
+.dica-arraste{font-size:14px;color:var(--mut2);margin-top:10px}
+
+/* ganhos */
+.ganhos{padding:120px 0}
+.grade4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:44px;perspective:900px}
+.card{padding:28px 24px;border-radius:18px;background:var(--cartao);border:1px solid var(--linha);position:relative;overflow:hidden;transition:translate .35s,box-shadow .35s}
+.card:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--c)}
+.card:hover{translate:0 -6px;box-shadow:0 24px 40px #16171c1f}
+.card b{display:block;font-size:22px;margin-bottom:8px}
+.card span{color:var(--mut);font-size:16px}
+@media(max-width:1000px){.grade4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.grade4{grid-template-columns:1fr}}
+footer{padding:46px 0 80px;border-top:1px solid var(--linha)}
+footer b{font-size:22px}
+footer p{color:var(--mut2)}
+.fim-barras{height:10px;background:var(--barras);margin-top:24px;border-radius:3px;max-width:260px}
+</style>
+</head>
+<body>
+<div class="papel"></div><div class="spot"></div>
+<div class="prog"></div>
+
+<nav aria-label="Seções" data-lenis-prevent>
+  <a class="nome" href="#topo">Jhonata Sá</a>
+  <a href="#tarjas">Tarjas</a>
+  <a href="#eleicoes">Eleições</a>
+  <a href="#programacao">Programação</a>
+  <a href="#carnaval">Carnaval</a>
+  <a href="#parintins">Parintins</a>
+  <a href="#antes">Antes e agora</a>
+  <a href="#ganhos">Ganhos</a>
+</nav>
+
+<!-- abertura -->
+<header class="hero" id="topo"><div class="box">
+  <div class="ao-vivo an-in"><i></i>PORTFÓLIO 2026</div>
+  <h1><span class="linha-h">Apuração e grafismo<span class="scan"></span></span><span class="linha-h"><span class="marca">feitos para a TV.</span><span class="scan"></span></span></h1>
+  <p class="lead an-in">Cinco sistemas criados para a operação da emissora. Do dado oficial à arte no ar, com identidade própria, preview antes de publicar e espaço para patrocinadores.</p>
+  <div class="nums an-in">
+    <div><b data-odo="5">5</b><span>sistemas</span></div>
+    <div><b data-odo="7">7</b><span>programas numa central</span></div>
+    <div><b>TSE</b><span>dados automáticos</span></div>
+    <div><b data-odo="100" data-s="%">100%</b><span>marca da emissora</span></div>
+  </div>
+</div></header>
+
+<!-- vídeo de apresentação -->
+<section class="reel" aria-label="Vídeo de apresentação"><div class="box">
+  <div class="tv">
+    <div class="tela"><video src="../midia/portfolio-video.mp4" poster="../midia/capa.jpg" controls muted playsinline preload="metadata"></video></div>
+    <span class="luzinha" aria-hidden="true"></span>
+  </div>
+  <div class="rod"><span>Vídeo de apresentação com todos os projetos</span><span>5 min 35 s</span></div>
+</div></section>
+
+<!-- projetos -->
+<section class="galeria" id="projetos" aria-label="Projetos"><div class="fixo">
+  <div class="topo box"><div class="mono">Cinco projetos, gravação real</div></div>
+  <div class="pista box">
+
+    <article class="painel" id="tarjas">
+      <div class="txt">
+        <div class="n" aria-hidden="true">01</div>
+        <h2>Tarjas Eleitorais</h2>
+        <p class="lead">Inovação de 2026. Antes não existia tarja de apuração em tempo real na programação; agora o resultado entra sobre o que está no ar, sem interromper.</p>
+        <ul>
+          <li>Dados oficiais do TSE, sem digitação <span class="tag">NOVO</span></li>
+          <li>Fotos, nomes e percentuais dos candidatos</li>
+          <li>Crawl de notícias A Crítica via RSS <span class="tag">NOVO</span></li>
+          <li>Preview e TAKE: nada vai ao ar sem conferência</li>
+        </ul>
+      </div>
+      <div class="monitor"><div class="fv"><video class="tr" src="../midia/projeto1.mp4" poster="../midia/projeto1.jpg" muted loop playsinline preload="none" aria-label="Gravação real das tarjas eleitorais"></video></div><div class="rod"><span>Gravação real do sistema</span><span>Saída transparente</span></div></div>
+    </article>
+
+    <article class="painel" id="eleicoes">
+      <div class="txt">
+        <div class="n" aria-hidden="true">02</div>
+        <h2>Apuração Eleições Gerais</h2>
+        <p class="lead">Resultado completo, do Brasil a qualquer cidade, com mapa colorido por quem lidera.</p>
+        <div class="contador"><b data-odo="5569" aria-label="5.569 municípios">5.569</b></div>
+        <div class="selo"><b>municípios</b> navegáveis num clique</div>
+        <ul>
+          <li>Mapa colorido por município <span class="tag">NOVO</span></li>
+          <li>Brancos, nulos, comparecimento e abstenção</li>
+          <li>Presidente e governador em tempo real</li>
+        </ul>
+      </div>
+      <div class="monitor"><div class="fv"><video src="../midia/projeto2.mp4" poster="../midia/projeto2.jpg" muted loop playsinline preload="none" aria-label="Gravação real da apuração das eleições"></video></div><div class="rod"><span>Gravação real do sistema</span><span>Dados do TSE</span></div></div>
+    </article>
+
+    <article class="painel" id="programacao">
+      <div class="txt">
+        <div class="n" aria-hidden="true">03</div>
+        <h2>Programação Diária</h2>
+        <p class="lead">Antes, cada programa tinha seu projeto e o texto era digitado no título do vMix. Agora, uma central só cuida de todos.</p>
+        <ul>
+          <li>Animações originais mais suaves, a 30 fps <span class="tag m">MELHOROU</span></li>
+          <li>Manchetes e créditos colados do Excel <span class="tag">NOVO</span></li>
+          <li>Relógio, clima, crawl RSS, QR code e merchan</li>
+        </ul>
+      </div>
+      <div class="monitor"><div class="fv"><video class="tr" src="../midia/projeto3.mp4" poster="../midia/projeto3.jpg" muted loop playsinline preload="none" aria-label="Gravação real da central de programação"></video></div><div class="rod"><span>Gravação real do sistema</span><span>Saída transparente</span></div></div>
+    </article>
+
+    <article class="painel" id="carnaval">
+      <div class="txt">
+        <div class="n" aria-hidden="true">04</div>
+        <h2>Carnaval 2027</h2>
+        <p class="lead">Arte própria da emissora para a apuração do Carnaval de Manaus, com espaço para patrocinadores.</p>
+        <ul>
+          <li>Arte própria com a identidade do Carnaval <span class="tag">NOVO</span></li>
+          <li>Descarte e penalidades automáticos <span class="tag m">MELHOROU</span></li>
+          <li>Classificação vertical animada <span class="tag">NOVO</span></li>
+          <li>Patrocinadores revezando na faixa <span class="tag">NOVO</span></li>
+        </ul>
+      </div>
+      <div class="monitor"><div class="fv"><video class="tr" src="../midia/projeto4.mp4" poster="../midia/projeto4.jpg" muted loop playsinline preload="none" aria-label="Gravação real do sistema do Carnaval 2027"></video></div><div class="rod"><span>Gravação real do sistema</span><span>Sistema próprio</span></div></div>
+    </article>
+
+    <article class="painel" id="parintins">
+      <div class="txt">
+        <div class="n" aria-hidden="true">05</div>
+        <h2>Parintins 2027</h2>
+        <p class="lead">A emissora passa a controlar o ritmo da revelação das notas, boi por boi, ao vivo.</p>
+        <ul>
+          <li>Revelação de nota por boi, em tempo real <span class="tag">NOVO</span></li>
+          <li>Blocos A, B e C com descarte e subtotais <span class="tag m">MELHOROU</span></li>
+          <li>Resultado da noite animado <span class="tag">NOVO</span></li>
+          <li>Vinheta de patrocinadores <span class="tag">NOVO</span></li>
+        </ul>
+      </div>
+      <div class="monitor"><div class="fv"><video class="tr" src="../midia/projeto5.mp4" poster="../midia/projeto5.jpg" muted loop playsinline preload="none" aria-label="Gravação real do sistema de Parintins 2027"></video></div><div class="rod"><span>Gravação real do sistema</span><span>Sistema próprio</span></div></div>
+    </article>
+
+  </div>
+  <div class="contagem" aria-hidden="true"><span class="atual">01</span><span class="trilho"><i></i></span><span>05</span></div>
+</div></section>
+
+<!-- programas acendendo -->
+<section class="grade-prog"><div class="box">
+  <div class="mono">Uma central, sete programas</div>
+  <h2>Cada programa com o seu pacote gráfico.</h2>
+  <div class="chips" aria-label="Programas atendidos">
+    <div class="chip"><i></i>Manhã</div><div class="chip"><i></i>Aquecimento</div><div class="chip"><i></i>Alô</div>
+    <div class="chip"><i></i>Magazine</div><div class="chip"><i></i>17h</div><div class="chip"><i></i>Alerta</div><div class="chip"><i></i>ACBR</div>
+  </div>
+</div></section>
+
+<!-- antes e agora -->
+<section class="ba" id="antes"><div class="box">
+  <div class="mono">Como era e como está agora</div>
+  <h2>Arraste para ver a diferença.</h2>
+  <p class="lead">Antes, a emissora exibia a arte de terceiros, sem a marca da TV e sem espaço para patrocínio.</p>
+  <div class="compara">
+    <div class="caso">
+      <div>
+        <h3 style="font-size:28px;letter-spacing:-.02em">Carnaval de Manaus</h3>
+        <p class="lead" style="font-size:17px;margin-top:8px">Em 2025 foi uma planilha na tela. Em 2026, a arte pronta do governo.</p>
+        <div class="escolha" role="group" aria-label="Escolha o ano de antes">
+          <button type="button" aria-pressed="true" data-img="../midia/antes-carnaval-2025.jpg" data-txt="2025">2025</button>
+          <button type="button" aria-pressed="false" data-img="../midia/antes-carnaval-2026.jpg" data-txt="2026">2026</button>
+        </div>
+      </div>
+      <div>
+        <div class="slider" tabindex="0" role="slider" aria-label="Comparar antes e agora do Carnaval" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <img class="antes" src="../midia/antes-carnaval-2025.jpg" alt="Carnaval antes: arte de terceiros" loading="lazy" decoding="async">
+          <div class="depois" style="position:absolute;inset:0"><video src="../midia/projeto4.mp4" poster="../midia/projeto4.jpg" muted loop playsinline preload="none" aria-label="Carnaval 2027: sistema próprio"></video></div>
+          <span class="lado e">2025</span><span class="lado d">2027</span>
+          <span class="divisa" aria-hidden="true"></span><span class="alca" aria-hidden="true">&#8596;</span>
+        </div>
+        <p class="dica-arraste">Arraste a divisória ou use as setas do teclado.</p>
+      </div>
+    </div>
+    <div class="caso">
+      <div>
+        <h3 style="font-size:28px;letter-spacing:-.02em">Festival de Parintins</h3>
+        <p class="lead" style="font-size:17px;margin-top:8px">Em 2025, a planilha do Excel no ar. Em 2026, a arte do governo.</p>
+        <div class="escolha" role="group" aria-label="Escolha o ano de antes">
+          <button type="button" aria-pressed="true" data-img="../midia/antes-parintins-2025.jpg" data-txt="2025">2025</button>
+          <button type="button" aria-pressed="false" data-img="../midia/antes-parintins-2026.jpg" data-txt="2026">2026</button>
+        </div>
+      </div>
+      <div>
+        <div class="slider" tabindex="0" role="slider" aria-label="Comparar antes e agora de Parintins" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <img class="antes" src="../midia/antes-parintins-2025.jpg" alt="Parintins antes: tabela de terceiros" loading="lazy" decoding="async">
+          <div class="depois" style="position:absolute;inset:0"><video src="../midia/projeto5.mp4" poster="../midia/projeto5.jpg" muted loop playsinline preload="none" aria-label="Parintins 2027: sistema próprio"></video></div>
+          <span class="lado e">2025</span><span class="lado d">2027</span>
+          <span class="divisa" aria-hidden="true"></span><span class="alca" aria-hidden="true">&#8596;</span>
+        </div>
+        <p class="dica-arraste">Arraste a divisória ou use as setas do teclado.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ganhos -->
+<section class="ganhos" id="ganhos"><div class="box">
+  <div class="mono">O que a emissora ganha</div>
+  <h2>De repassar a arte dos outros <span class="marca">para ter a sua.</span></h2>
+  <div class="grade4">
+    <div class="card" style="--c:var(--b1)"><b>Identidade própria</b><span>Todas as artes com a marca e o padrão da emissora.</span></div>
+    <div class="card" style="--c:var(--b2)"><b>Receita nova</b><span>Faixas e vinhetas de patrocínio dentro da apuração.</span></div>
+    <div class="card" style="--c:var(--b3)"><b>Menos erro ao vivo</b><span>Dados automáticos e preview antes de ir ao ar.</span></div>
+    <div class="card" style="--c:var(--b4)"><b>Operação rápida</b><span>Tudo pelo navegador do vMix.</span></div>
+  </div>
+</div></section>
+
+<footer><div class="box">
+  <b>Jhonata Sá</b>
+  <p>Dev. de Soluções em IA</p>
+  <div class="fim-barras" aria-hidden="true"></div>
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+{
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Vídeos só tocam quando aparecem na tela
+  const vo = new IntersectionObserver((itens) => itens.forEach((it) => {
+    const v = it.target;
+    if (it.isIntersecting) { if (v.preload === 'none') v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+  }), { threshold: 0.15 });
+  document.querySelectorAll('video[loop]').forEach((v) => vo.observe(v));
+
+  // Antes e agora: divisória de arrastar (funciona com mouse, dedo e teclado)
+  document.querySelectorAll('.caso').forEach((caso) => {
+    const s = caso.querySelector('.slider'), img = s.querySelector('img.antes'), rot = s.querySelector('.lado.e');
+    const pos = (x) => { x = Math.max(0, Math.min(100, x)); s.style.setProperty('--x', x + '%'); s.setAttribute('aria-valuenow', Math.round(x)); };
+    s._pos = pos;
+    let arrastando = false;
+    const mover = (e) => { const r = s.getBoundingClientRect(); pos((e.clientX - r.left) / r.width * 100); };
+    s.addEventListener('pointerdown', (e) => { arrastando = true; s.setPointerCapture(e.pointerId); mover(e); if (s._auto) s._auto.kill(); });
+    s.addEventListener('pointermove', (e) => arrastando && mover(e));
+    s.addEventListener('pointerup', () => { arrastando = false; });
+    s.addEventListener('keydown', (e) => {
+      const atual = parseFloat(s.getAttribute('aria-valuenow'));
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); pos(atual + (e.key === 'ArrowRight' ? 5 : -5)); }
+    });
+    caso.querySelectorAll('.escolha button').forEach((b) => b.addEventListener('click', () => {
+      caso.querySelectorAll('.escolha button').forEach((o) => o.setAttribute('aria-pressed', o === b));
+      img.src = b.dataset.img; rot.textContent = b.dataset.txt;
+    }));
+  });
+
+  // Odômetro: cada número vira colunas de dígitos que giram até o valor final
+  function odometro(el) {
+    const fim = el.dataset.odo, suf = el.dataset.s || '';
+    const texto = Number(fim).toLocaleString('pt-BR');
+    el.textContent = '';
+    const caixa = document.createElement('span'); caixa.className = 'odo'; caixa.setAttribute('aria-hidden', 'true');
+    const cols = [];
+    [...texto].forEach((ch) => {
+      if (!/\d/.test(ch)) { const p = document.createElement('span'); p.textContent = ch; caixa.append(p); return; }
+      const col = document.createElement('span'); col.className = 'col';
+      for (let v = 0; v < 20; v++) { const d = document.createElement('span'); d.textContent = v % 10; col.append(d); }
+      col.dataset.alvo = ch; caixa.append(col); cols.push(col);
+    });
+    el.append(caixa);
+    if (suf) el.append(suf);
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', texto + suf);
+    return cols;
+  }
+  const odos = [...document.querySelectorAll('[data-odo]')].map((el) => ({ el, cols: odometro(el) }));
+  const girar = (o, atraso = 0) => o.cols.forEach((c, i) => {
+    const alvo = +c.dataset.alvo + 10; // dá uma volta inteira antes de parar
+    if (window.gsap && !calmo) gsap.fromTo(c, { yPercent: 0 }, { yPercent: -alvo / 20 * 100, duration: 1.6 + i * 0.25, delay: atraso, ease: 'power3.out' });
+    else c.style.transform = `translateY(${-(+c.dataset.alvo) / 20 * 100}%)`;
+  });
+
+  if (window.gsap && window.ScrollTrigger && !calmo) iniciar();
+  else odos.forEach((o) => girar(o));
+
+  function iniciar() {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
+    let lenis = null;
+    if (window.Lenis) {
+      lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    }
+    window.__irPara = (y) => lenis ? lenis.scrollTo(y) : scrollTo({ top: y, behavior: 'smooth' });
+
+    // luz de estúdio que acompanha o mouse
+    const spot = document.querySelector('.spot');
+    if (matchMedia('(pointer:fine)').matches) {
+      const sx = gsap.quickTo(spot, 'x', { duration: 0.8, ease: 'power3' }), sy = gsap.quickTo(spot, 'y', { duration: 0.8, ease: 'power3' });
+      addEventListener('pointermove', (e) => { spot.style.opacity = 1; sx(e.clientX); sy(e.clientY); }, { passive: true });
+    }
+
+    gsap.to('.prog', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
+
+    // ABERTURA: cada linha do título aparece com uma linha de varredura colorida descendo
+    const linhas = gsap.utils.toArray('.hero .linha-h');
+    const t0 = gsap.timeline({ delay: 0.2 });
+    linhas.forEach((l, i) => {
+      const scan = l.querySelector('.scan');
+      t0.fromTo(l, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.9, ease: 'power2.inOut' }, i * 0.35)
+        .fromTo(scan, { top: '0%', opacity: 1 }, { top: '100%', duration: 0.9, ease: 'power2.inOut' }, i * 0.35)
+        .to(scan, { opacity: 0, duration: 0.25 }, i * 0.35 + 0.85);
+    });
+    t0.from('.hero .an-in', { y: 22, opacity: 0, stagger: 0.12, duration: 0.8, ease: 'power3.out' }, 0.5)
+      .add(() => odos.filter((o) => o.el.closest('.hero')).forEach((o, i) => girar(o, i * 0.1)), 0.8);
+
+    // VÍDEO: a tela liga como TV antiga (linha fina que abre na vertical) conforme a rolagem
+    gsap.fromTo('.tv .tela', { clipPath: 'inset(49.6% 0 49.6% 0)', filter: 'brightness(3)' }, { clipPath: 'inset(0% 0 0% 0)', filter: 'brightness(1)', ease: 'none',
+      scrollTrigger: { trigger: '.reel', start: 'top 85%', end: 'top 25%', scrub: 1 } });
+    gsap.fromTo('.tv', { rotateX: 18, y: 60, transformPerspective: 1200 }, { rotateX: 0, y: 0, ease: 'none',
+      scrollTrigger: { trigger: '.reel', start: 'top 95%', end: 'top 25%', scrub: 1 } });
+
+    // monitores inclinam levemente seguindo o mouse
+    if (matchMedia('(pointer:fine)').matches) document.querySelectorAll('.monitor').forEach((m) => {
+      const rx = gsap.quickTo(m, 'rotateX', { duration: 0.6 }), ry = gsap.quickTo(m, 'rotateY', { duration: 0.6 });
+      gsap.set(m, { transformPerspective: 1000 });
+      m.addEventListener('pointermove', (e) => { const r = m.getBoundingClientRect(); ry(((e.clientX - r.left) / r.width - 0.5) * 8); rx(-((e.clientY - r.top) / r.height - 0.5) * 8); });
+      m.addEventListener('pointerleave', () => { rx(0); ry(0); });
+    });
+
+    const mm = gsap.matchMedia();
+    mm.add({ wide: '(min-width: 901px)', narrow: '(max-width: 900px)' }, (ctx) => {
+      const gal = document.querySelector('.galeria'), pista = gal.querySelector('.pista');
+      const paineis = gsap.utils.toArray('.painel');
+      if (ctx.conditions.wide) {
+        // PROJETOS: a rolagem vertical empurra os projetos na horizontal
+        gal.classList.add('horiz');
+        // cada painel tem exatamente a largura visível (sem a barra de rolagem), então cada parada fica alinhada
+        const largura = () => document.documentElement.clientWidth;
+        const ajustar = () => gal.style.setProperty('--vw', largura() + 'px');
+        ajustar();
+        ScrollTrigger.addEventListener('refreshInit', ajustar);
+        const dist = () => largura() * (paineis.length - 1);
+        const tl = gsap.to(pista, { x: () => -dist(), ease: 'none', scrollTrigger: {
+          trigger: gal, start: 'top top', end: () => '+=' + dist(), scrub: 1, pin: gal.querySelector('.fixo'), invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            gal.querySelector('.contagem .trilho i').style.transform = `scaleX(${self.progress})`;
+            gal.querySelector('.contagem .atual').textContent = '0' + (Math.round(self.progress * (paineis.length - 1)) + 1);
+          } } });
+        window.__galeria = { st: tl.scrollTrigger, n: paineis.length };
+        // dentro de cada painel, texto e monitor entram quando o painel chega
+        paineis.forEach((p) => {
+          gsap.from(p.querySelectorAll('.txt > *'), { y: 40, opacity: 0, stagger: 0.06, duration: 0.7, ease: 'power3.out',
+            scrollTrigger: { trigger: p, containerAnimation: tl, start: 'left 70%' } });
+          gsap.from(p.querySelector('.monitor'), { rotateY: -25, x: 120, opacity: 0, duration: 1, ease: 'power3.out', transformPerspective: 1200,
+            scrollTrigger: { trigger: p, containerAnimation: tl, start: 'left 60%' } });
+          const odo = odos.find((o) => p.contains(o.el));
+          if (odo) ScrollTrigger.create({ trigger: p, containerAnimation: tl, start: 'left 55%', once: true, onEnter: () => girar(odo) });
+        });
+        return () => { ScrollTrigger.removeEventListener('refreshInit', ajustar); gal.classList.remove('horiz'); gal.style.removeProperty('--vw'); window.__galeria = null; };
+      }
+      // celular: projetos em coluna, entrando de baixo
+      window.__galeria = null;
+      paineis.forEach((p) => {
+        gsap.from(p.children, { y: 50, opacity: 0, stagger: 0.12, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: p, start: 'top 82%' } });
+        const odo = odos.find((o) => p.contains(o.el));
+        if (odo) ScrollTrigger.create({ trigger: odo.el, start: 'top 85%', once: true, onEnter: () => girar(odo) });
+      });
+    });
+
+    // PROGRAMAS: acendem um por vez, como luz de "no ar" passando pela grade
+    const chips = gsap.utils.toArray('.chip');
+    gsap.from(chips, { y: 30, opacity: 0, stagger: 0.07, duration: 0.6, scrollTrigger: { trigger: '.chips', start: 'top 85%' } });
+    let iChip = 0, loopChip = null;
+    ScrollTrigger.create({ trigger: '.chips', start: 'top 90%', end: 'bottom 10%',
+      onToggle: (self) => {
+        clearInterval(loopChip);
+        if (self.isActive) loopChip = setInterval(() => { chips.forEach((c) => c.classList.remove('on')); chips[iChip++ % chips.length].classList.add('on'); }, 900);
+        else chips.forEach((c) => c.classList.remove('on'));
+      } });
+
+    // ANTES E AGORA: a divisória faz uma demonstração sozinha quando aparece
+    document.querySelectorAll('.slider').forEach((s) => {
+      const o = { x: 50 };
+      s._auto = gsap.timeline({ paused: true }).to(o, { x: 18, duration: 0.9, ease: 'power2.inOut', onUpdate: () => s._pos(o.x) })
+        .to(o, { x: 82, duration: 1.2, ease: 'power2.inOut', onUpdate: () => s._pos(o.x) })
+        .to(o, { x: 50, duration: 0.8, ease: 'power2.inOut', onUpdate: () => s._pos(o.x) });
+      ScrollTrigger.create({ trigger: s, start: 'top 75%', once: true, onEnter: () => s._auto.play() });
+      gsap.from(s, { clipPath: 'inset(0 0 0 0 round 60px)', scale: 0.92, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 85%' } });
+    });
+
+    // GANHOS: cartões viram de baixo como cartas
+    gsap.from('.card', { rotateX: -70, y: 40, opacity: 0, transformOrigin: '50% 100%', stagger: 0.1, duration: 0.9, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: '.grade4', start: 'top 85%' } });
+
+    // títulos das seções sobem com leve desfoque
+    document.querySelectorAll('.grade-prog h2, .ba h2, .ganhos h2').forEach((h) => gsap.from(h, { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out',
+      scrollTrigger: { trigger: h, start: 'top 85%' } }));
+
+    // menu: leva até a seção, inclusive aos projetos dentro do trilho horizontal
+    document.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', (e) => {
+      const alvo = document.querySelector(a.getAttribute('href'));
+      if (!alvo) return;
+      e.preventDefault();
+      const g = window.__galeria, i = [...document.querySelectorAll('.painel')].indexOf(alvo);
+      if (g && i >= 0) window.__irPara(g.st.start + (g.st.end - g.st.start) * i / (g.n - 1) + 2);
+      else if (lenis) lenis.scrollTo(alvo, { offset: alvo.id === 'topo' ? 0 : -20 });
+      else alvo.scrollIntoView({ behavior: 'smooth' });
+    }));
+
+    document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
+    addEventListener('load', () => ScrollTrigger.refresh());
+  }
+
+  // menu destaca a seção atual (também durante o trilho horizontal)
+  const nav = document.querySelector('nav'), links = [...nav.querySelectorAll('a:not(.nome)')];
+  let atual = null, pedido = false;
+  function marcar() {
+    pedido = false;
+    let ativo = null;
+    const g = window.__galeria;
+    links.forEach((a) => {
+      const sec = document.querySelector(a.getAttribute('href')); if (!sec) return;
+      const i = [...document.querySelectorAll('.painel')].indexOf(sec);
+      if (g && i >= 0) { if (scrollY >= g.st.start - innerHeight * 0.4 && Math.round(g.st.progress * (g.n - 1)) >= i && scrollY <= g.st.end + 10) ativo = a; }
+      else if (sec.getBoundingClientRect().top <= innerHeight * 0.4) ativo = a;
+    });
+    if (ativo === atual) return;
+    if (atual) atual.classList.remove('ativo');
+    if (ativo) { ativo.classList.add('ativo'); nav.scrollTo({ left: ativo.offsetLeft - (nav.clientWidth - ativo.offsetWidth) / 2, behavior: 'smooth' }); }
+    atual = ativo;
+  }
+  addEventListener('scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(marcar); } }, { passive: true });
+  addEventListener('load', marcar);
+}
+</script>
+</body>
+</html>
