@@ -472,10 +472,27 @@ footer p{color:var(--mut2)}
       gsap.to(oc, { v: 5569, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: cont, start: 'top 85%' },
         onUpdate: () => cont.textContent = Math.round(oc.v).toLocaleString('pt-BR') });
 
-      // CENA 5: faixa de programas acelera com a rolagem
-      const fx = gsap.to('.faixa .in', { xPercent: -50, repeat: -1, duration: 28, ease: 'none' });
+      // CENA 5: faixa de programas anda sozinha e acelera com a rolagem.
+      // Posição sempre em pixel inteiro (o texto não cintila) e volta contínua nos dois sentidos
+      // (rolar para cima não trava a faixa). Depois da rolagem, volta suave à velocidade normal.
+      const faixa = document.querySelector('.faixa .in');
+      const FX_PX_S = 60;                       // 60 px/s = 1 px por quadro numa tela de 60 Hz
+      let fxPos = 0, fxVel = 1, fxAlvo = 1, fxDir = 1, fxVolta = faixa.scrollWidth / 2;
+      const medirFaixa = () => { fxVolta = faixa.scrollWidth / 2; };
+      document.fonts.ready.then(medirFaixa);
+      addEventListener('resize', medirFaixa);
+      faixa.style.willChange = 'transform';
+      const andarFaixa = (t, dt) => {
+        if (!fxVolta) return;
+        fxAlvo += (fxDir - fxAlvo) * Math.min(1, dt / 700);
+        fxVel += (fxAlvo - fxVel) * Math.min(1, dt / 150);
+        fxPos = (((fxPos + fxVel * FX_PX_S * dt / 1000) % fxVolta) + fxVolta) % fxVolta;
+        faixa.style.transform = `translate3d(${-Math.round(fxPos)}px,0,0)`;
+      };
+      gsap.ticker.add(andarFaixa);
       ScrollTrigger.create({ trigger: '.faixa', start: 'top bottom', end: 'bottom top', onUpdate: (self) => {
-        gsap.to(fx, { timeScale: self.direction * (1 + Math.abs(self.getVelocity()) / 350), duration: 0.4, overwrite: true });
+        fxDir = self.direction;
+        fxAlvo = self.direction * (1 + Math.abs(self.getVelocity()) / 350);
       } });
 
       // CENAS 6 e 7: como era e como está agora (cena assinatura)
@@ -515,7 +532,12 @@ footer p{color:var(--mut2)}
       gsap.from('.ganhos .card', { y: 70, rotate: (i) => (i - 1.5) * 3, opacity: 0, stagger: 0.1, duration: 1, ease: 'expo.out',
         scrollTrigger: { trigger: '.ganhos .grade4', start: 'top 85%' } });
 
-      return () => document.querySelectorAll('.ba').forEach((s) => s.classList.remove('cine'));
+      return () => {
+        gsap.ticker.remove(andarFaixa);
+        removeEventListener('resize', medirFaixa);
+        faixa.style.transform = '';
+        document.querySelectorAll('.ba').forEach((s) => s.classList.remove('cine'));
+      };
     });
 
     // recalcula posições depois que fontes e imagens carregam
